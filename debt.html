@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Процентный счётчик</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .stop-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        }
+
+        .share-btn {
+            background: linear-gradient(135deg, #20c997 0%, #1a9f7a 100%);
+        }
+
+        .result {
+            margin-top: 30px;
+            text-align: center;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            border: 2px dashed #ddd;
+        }
+
+        .percentage {
+            font-size: 4em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .current-amount {
+            font-size: 1.2em;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        .info {
+            color: #888;
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+
+        .config-mode {
+            display: block;
+        }
+
+        .counter-mode {
+            display: none;
+        }
+
+        .share-link {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f1f3f4;
+            border-radius: 10px;
+            word-break: break-all;
+            font-size: 0.9em;
+        }
+
+        .share-link a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .share-link a:hover {
+            text-decoration: underline;
+        }
+
+        .auto-start-info {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #0066cc;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Режим настройки -->
+    <div class="config-mode" id="configMode">
+        <h1>⚙️ Настройки</h1>
+
+        <div class="input-group">
+            <label for="startDate">Дата начала:</label>
+            <input type="datetime-local" id="startDate">
+        </div>
+
+        <div class="input-group">
+            <label for="initialAmount">Начальная сумма:</label>
+            <input type="number" id="initialAmount" value="1000" step="100">
+        </div>
+
+        <div class="input-group">
+            <label for="interestRate">Годовая ставка (%):</label>
+            <input type="number" id="interestRate" value="10" step="0.1">
+        </div>
+
+        <div class="input-group">
+            <label for="autoStart">Состояние при загрузке:</label>
+            <select id="autoStart">
+                <option value="false">Показывать настройки</option>
+                <option value="true">Автозапуск счётчика</option>
+            </select>
+            <div class="auto-start-info" id="autoStartInfo">
+                При выборе "Автозапуск счётчика" страница сразу покажет работающий счётчик
+            </div>
+        </div>
+
+        <button onclick="applySettings()">Применить настройки</button>
+        <button onclick="startCounter()">Запустить счётчик</button>
+
+        <div class="share-link" id="shareLinkContainer" style="display: none;">
+            <strong>Ссылка для общего доступа:</strong><br>
+            <a href="" id="shareLink" target="_blank"></a>
+        </div>
+    </div>
+
+    <!-- Режим счётчика -->
+    <div class="counter-mode" id="counterMode">
+        <h1>💰 Счётчик</h1>
+
+        <div class="result">
+            <div>Текущая сумма:</div>
+            <div class="percentage" id="percentageDisplay">0.00</div>
+            <div class="current-amount" id="currentAmount"></div>
+            <div class="info" id="info"></div>
+        </div>
+
+        <button onclick="stopCounter()" class="stop-btn">Остановить и настроить</button>
+        <button onclick="shareCounter()" class="share-btn">Поделиться ссылкой</button>
+        <button onclick="applySettings()">Изменить настройки</button>
+    </div>
+</div>
+
+<script>
+    let counterInterval = null;
+    let startTime = null;
+    let initialAmount = 0;
+    let annualRate = 0;
+
+    // Элементы DOM
+    const configMode = document.getElementById('configMode');
+    const counterMode = document.getElementById('counterMode');
+    const shareLinkContainer = document.getElementById('shareLinkContainer');
+    const shareLink = document.getElementById('shareLink');
+    const autoStartSelect = document.getElementById('autoStart');
+    const autoStartInfo = document.getElementById('autoStartInfo');
+
+    // Инициализация из URL параметров
+    function initFromURL() {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // Дата начала
+        const urlStartDate = urlParams.get('startDate');
+        if (urlStartDate) {
+            document.getElementById('startDate').value = urlStartDate;
+        } else {
+            // Устанавливаем текущую дату и время по умолчанию
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            document.getElementById('startDate').value = now.toISOString().slice(0, 16);
+        }
+
+        // Начальная сумма
+        const urlAmount = urlParams.get('amount');
+        if (urlAmount) {
+            document.getElementById('initialAmount').value = urlAmount;
+        }
+
+        // Процентная ставка
+        const urlRate = urlParams.get('rate');
+        if (urlRate) {
+            document.getElementById('interestRate').value = urlRate;
+        }
+
+        // Автозапуск
+        const urlAutoStart = urlParams.get('autoStart');
+        if (urlAutoStart) {
+            autoStartSelect.value = urlAutoStart;
+
+            // Если автозапуск включен, сразу запускаем счётчик
+            if (urlAutoStart === 'true') {
+                setTimeout(() => startCounter(), 100);
+            }
+        }
+
+        updateAutoStartInfo();
+    }
+
+    // Обновление информации об автозапуске
+    function updateAutoStartInfo() {
+        if (autoStartSelect.value === 'true') {
+            autoStartInfo.textContent = 'При следующей загрузке страница сразу покажет работающий счётчик';
+            autoStartInfo.style.background = '#e7f3ff';
+            autoStartInfo.style.color = '#0066cc';
+        } else {
+            autoStartInfo.textContent = 'При следующей загрузке будет показан экран настроек';
+            autoStartInfo.style.background = '#f8f9fa';
+            autoStartInfo.style.color = '#666';
+        }
+    }
+
+    // Применение настроек без запуска счётчика
+    function applySettings() {
+        // Просто обновляем ссылку для общего доступа
+        generateShareLink();
+        alert('Настройки применены! Ссылка для общего доступа обновлена.');
+    }
+
+    function startCounter() {
+        // Получаем значения из полей ввода
+        const startDateValue = document.getElementById('startDate').value;
+        initialAmount = parseFloat(document.getElementById('initialAmount').value);
+        annualRate = parseFloat(document.getElementById('interestRate').value);
+
+        if (isNaN(initialAmount) || isNaN(annualRate) || !startDateValue) {
+            alert('Пожалуйста, заполните все поля корректно');
+            return;
+        }
+
+        startTime = new Date(startDateValue);
+
+        // Переключаемся в режим счётчика
+        configMode.style.display = 'none';
+        counterMode.style.display = 'block';
+
+        // Обновляем отображение
+        updateDisplay(initialAmount);
+
+        // Запускаем обновление каждую секунду
+        if (counterInterval) {
+            clearInterval(counterInterval);
+        }
+        counterInterval = setInterval(updateCounter, 1000);
+
+        // Генерируем ссылку для общего доступа
+        generateShareLink();
+    }
+
+    function stopCounter() {
+        if (counterInterval) {
+            clearInterval(counterInterval);
+            counterInterval = null;
+        }
+
+        // Возвращаемся в режим настройки
+        configMode.style.display = 'block';
+        counterMode.style.display = 'none';
+    }
+
+    function updateCounter() {
+        const now = new Date();
+        const elapsedSeconds = (now - startTime) / 1000;
+
+        if (elapsedSeconds < 0) {
+            // Если дата начала в будущем
+            document.getElementById('info').textContent = 'Ожидание начала...';
+            updateDisplay(initialAmount);
+            return;
+        }
+
+        // Рассчитываем сумму с учётом сложных процентов
+        const elapsedYears = elapsedSeconds / (365 * 24 * 60 * 60);
+        const currentAmount = initialAmount * Math.pow(1 + annualRate/100, elapsedYears);
+
+        updateDisplay(currentAmount);
+
+        // Обновляем информацию
+        const elapsedDays = Math.floor(elapsedSeconds / (24 * 60 * 60));
+        const elapsedHours = Math.floor((elapsedSeconds % (24 * 60 * 60)) / (60 * 60));
+        const elapsedMinutes = Math.floor((elapsedSeconds % (60 * 60)) / 60);
+        const elapsedSecs = Math.floor(elapsedSeconds % 60);
+
+        document.getElementById('info').textContent =
+            `Прошло: ${elapsedDays}д ${elapsedHours}ч ${elapsedMinutes}м ${elapsedSecs}с`;
+    }
+
+    function updateDisplay(amount) {
+        const percentageElement = document.getElementById('percentageDisplay');
+        const currentAmountElement = document.getElementById('currentAmount');
+
+        // Форматируем число с двумя знаками после запятой
+        const formattedAmount = amount.toFixed(2);
+
+        // Плавное изменение числа
+        percentageElement.textContent = formattedAmount;
+
+        // Дополнительная информация
+        const profit = amount - initialAmount;
+        const profitPercentage = ((profit / initialAmount) * 100).toFixed(2);
+
+        currentAmountElement.textContent =
+            `Прибыль: ${profit.toFixed(2)} (${profitPercentage}%) | Ставка: ${annualRate}% годовых`;
+    }
+
+    function generateShareLink() {
+        const baseUrl = window.location.origin + window.location.pathname;
+        const params = new URLSearchParams({
+            startDate: document.getElementById('startDate').value,
+            amount: document.getElementById('initialAmount').value,
+            rate: document.getElementById('interestRate').value,
+            autoStart: autoStartSelect.value
+        });
+
+        const shareUrl = `${baseUrl}?${params.toString()}`;
+        shareLink.href = shareUrl;
+        shareLink.textContent = shareUrl;
+        shareLinkContainer.style.display = 'block';
+    }
+
+    function shareCounter() {
+        generateShareLink();
+
+        // Копируем в буфер обмена
+        navigator.clipboard.writeText(shareLink.href)
+            .then(() => alert('Ссылка скопирована в буфер обмена!'))
+            .catch(() => {
+                // Fallback для старых браузеров
+                const textArea = document.createElement('textarea');
+                textArea.value = shareLink.href;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                alert('Ссылка скопирована в буфер обмена!');
+            });
+    }
+
+    // Обработчики событий
+    autoStartSelect.addEventListener('change', function() {
+        updateAutoStartInfo();
+        generateShareLink();
+    });
+
+    // Обновляем информацию при изменении любых настроек
+    document.getElementById('startDate').addEventListener('change', generateShareLink);
+    document.getElementById('initialAmount').addEventListener('input', generateShareLink);
+    document.getElementById('interestRate').addEventListener('input', generateShareLink);
+
+    // Инициализация при загрузке
+    window.onload = initFromURL;
+</script>
+</body>
+</html>
