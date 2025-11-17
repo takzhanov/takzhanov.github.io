@@ -105,7 +105,7 @@
         }
 
         .percentage {
-            font-size: clamp(2.5em, 10vw, 4.5em);
+            font-size: clamp(2em, 8vw, 3.5em);
             font-weight: bold;
             color: #667eea;
             margin: 15px 0;
@@ -113,6 +113,7 @@
             word-break: break-all;
             overflow-wrap: break-word;
             line-height: 1.1;
+            letter-spacing: -1px;
         }
 
         .info {
@@ -132,10 +133,8 @@
 
         .image-preview {
             width: 100%;
-            max-width: 300px;
+            max-width: 100%;
             max-height: 200px;
-            width: auto;
-            height: auto;
             object-fit: contain;
             border-radius: 10px;
             margin: 10px auto;
@@ -145,13 +144,11 @@
 
         .counter-image {
             width: 100%;
-            max-width: 120px;
-            max-height: 120px;
-            width: auto;
-            height: auto;
+            max-width: 300px;
+            max-height: 250px;
             object-fit: contain;
-            border-radius: 10px;
-            margin-bottom: 15px;
+            border-radius: 15px;
+            margin-bottom: 20px;
             border: 2px solid #ddd;
             display: block;
             margin-left: auto;
@@ -165,7 +162,7 @@
 
         .counter-title {
             margin: 0;
-            font-size: clamp(1.4em, 5vw, 1.8em);
+            font-size: clamp(1.4em, 5vw, 1.7em);
         }
 
         .notification {
@@ -198,41 +195,21 @@
             flex: 1;
         }
 
-        .file-input-wrapper {
-            position: relative;
-            overflow: hidden;
-            display: inline-block;
-            width: 100%;
+        .url-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
         }
 
-        .file-input-wrapper input[type=file] {
-            position: absolute;
-            left: 0;
-            top: 0;
-            opacity: 0;
-            width: 100%;
-            height: 100%;
-            cursor: pointer;
+        .url-input-group input {
+            flex: 1;
+            margin-bottom: 0;
         }
 
-        .file-input-button {
-            background: #6c757d;
-            color: white;
-            padding: 12px;
-            border-radius: 10px;
-            text-align: center;
-            cursor: pointer;
-        }
-
-        .image-controls {
-            text-align: center;
-        }
-
-        .paste-hint {
-            font-size: 0.8em;
-            color: #666;
-            margin-top: 5px;
-            text-align: center;
+        .url-input-group button {
+            width: auto;
+            min-width: 120px;
+            margin-top: 0;
         }
 
         @media (max-width: 480px) {
@@ -242,16 +219,20 @@
             }
 
             .percentage {
-                font-size: 2.8em;
+                font-size: 2.2em;
             }
 
             .counter-image {
-                max-width: 100px;
-                max-height: 100px;
+                max-width: 250px;
+                max-height: 200px;
             }
 
-            .button-group {
+            .button-group, .url-input-group {
                 flex-direction: column;
+            }
+
+            .url-input-group button {
+                width: 100%;
             }
 
             .notification {
@@ -261,23 +242,24 @@
             }
         }
 
-        @media (min-width: 1200px) {
-            .container {
-                max-width: 600px;
-            }
-
+        @media (min-width: 768px) {
             .percentage {
-                font-size: clamp(3em, 8vw, 5em);
+                font-size: 3em;
             }
 
             .counter-image {
-                max-width: 150px;
-                max-height: 150px;
+                max-width: 350px;
+                max-height: 280px;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 550px;
             }
 
-            .image-preview {
-                max-width: 400px;
-                max-height: 250px;
+            .percentage {
+                font-size: 3.2em;
             }
         }
     </style>
@@ -299,12 +281,12 @@
         </div>
 
         <div class="input-group">
-            <label for="imageUpload">Картинка:</label>
-            <div class="file-input-wrapper">
-                <div class="file-input-button">Выбрать картинку</div>
-                <input type="file" id="imageUpload" accept="image/*">
+            <label for="imageUrl">Ссылка на картинку:</label>
+            <div class="url-input-group">
+                <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg">
+                <button onclick="loadImageFromUrl()">Загрузить</button>
             </div>
-            <div class="paste-hint">Или вставьте картинку из буфера обмена (Ctrl+V)</div>
+
             <div class="image-controls">
                 <img id="imagePreview" class="image-preview" style="display: none;">
                 <button id="removeImageBtn" class="remove-btn" style="display: none;">Убрать картинку</button>
@@ -318,7 +300,7 @@
 
         <div class="input-group">
             <label for="initialAmount">Начальная сумма:</label>
-            <input type="number" id="initialAmount" value="1000" step="100">
+            <input type="number" id="initialAmount" value="1000000" step="1000">
         </div>
 
         <div class="input-group">
@@ -332,7 +314,7 @@
     <!-- Режим счётчика -->
     <div class="counter-mode" id="counterMode">
         <div class="counter-header">
-            <img id="counterImage" class="counter-image" style="display: none;">
+            <img id="counterImage" class="counter-image" style="display: none;" onerror="handleImageError()">
             <h1 class="counter-title" id="counterTitle">💰 Счётчик</h1>
         </div>
 
@@ -354,17 +336,22 @@
     let initialAmount = 0;
     let annualRate = 0;
     let counterName = "";
-    let imageData = null;
+    let imageUrl = null;
 
     // Элементы DOM
     const configMode = document.getElementById('configMode');
     const counterMode = document.getElementById('counterMode');
     const counterTitle = document.getElementById('counterTitle');
     const notification = document.getElementById('notification');
-    const imageUpload = document.getElementById('imageUpload');
     const imagePreview = document.getElementById('imagePreview');
     const counterImage = document.getElementById('counterImage');
     const removeImageBtn = document.getElementById('removeImageBtn');
+    const imageUrlInput = document.getElementById('imageUrl');
+
+    // Инициализация при загрузке
+    function init() {
+        initFromURL();
+    }
 
     // Инициализация из URL параметров
     function initFromURL() {
@@ -376,15 +363,12 @@
             document.getElementById('counterName').value = decodeURIComponent(urlName);
         }
 
-        // Картинка (base64)
+        // Ссылка на картинку
         const urlImage = urlParams.get('image');
         if (urlImage) {
-            imageData = urlImage;
-            imagePreview.src = urlImage;
-            imagePreview.style.display = 'block';
-            counterImage.src = urlImage;
-            counterImage.style.display = 'block';
-            removeImageBtn.style.display = 'block';
+            imageUrl = decodeURIComponent(urlImage);
+            imageUrlInput.value = imageUrl;
+            loadImagePreview(imageUrl);
         }
 
         // Дата начала
@@ -402,6 +386,8 @@
         const urlAmount = urlParams.get('amount');
         if (urlAmount) {
             document.getElementById('initialAmount').value = urlAmount;
+        } else {
+            document.getElementById('initialAmount').value = 1000000;
         }
 
         // Процентная ставка
@@ -415,98 +401,64 @@
         if (urlAutoStart === 'true') {
             setTimeout(() => startCounter(), 100);
         }
-
-        // Добавляем обработчик вставки из буфера
-        setupPasteHandler();
     }
 
-    // Обработчик вставки из буфера обмена
-    function setupPasteHandler() {
-        document.addEventListener('paste', function(e) {
-            // Проверяем, находимся ли мы в режиме настроек
-            if (configMode.style.display !== 'block') return;
-
-            const items = e.clipboardData?.items;
-            if (!items) return;
-
-            for (let item of items) {
-                if (item.type.indexOf('image') !== -1) {
-                    const file = item.getAsFile();
-                    if (file) {
-                        processImageFile(file);
-                        e.preventDefault();
-                        break;
-                    }
-                }
-            }
-        });
-    }
-
-    // Обработчик загрузки картинки
-    imageUpload.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            processImageFile(file);
-        }
-    });
-
-    // Функция обработки файла картинки
-    function processImageFile(file) {
-        // Проверяем размер файла (максимум 2MB)
-        if (file.size > 2 * 1024 * 1024) {
-            showNotification('Файл слишком большой. Максимальный размер: 2MB', 'error');
+    // Загрузка картинки по URL
+    function loadImageFromUrl() {
+        const url = imageUrlInput.value.trim();
+        if (!url) {
+            showNotification('Введите ссылку на картинку', 'error');
             return;
         }
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            // Создаем изображение для масштабирования
-            const img = new Image();
-            img.onload = function() {
-                // Создаем canvas для сжатия изображения
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
+        if (!isValidImageUrl(url)) {
+            showNotification('Введите корректную ссылку на картинку (jpg, png, gif, webp, svg)', 'error');
+            return;
+        }
 
-                // Максимальные размеры
-                const maxWidth = 1200;
-                const maxHeight = 1200;
+        loadImagePreview(url);
+        showNotification('Картинка загружена');
+    }
 
-                let width = img.width;
-                let height = img.height;
+    // Проверка валидности URL картинки
+    function isValidImageUrl(url) {
+        try {
+            const urlObj = new URL(url);
+            const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+            const pathname = urlObj.pathname.toLowerCase();
+            return imageExtensions.some(ext => pathname.endsWith(ext)) ||
+                urlObj.hostname.includes('imgur') ||
+                urlObj.hostname.includes('cloudinary') ||
+                pathname.includes('image') ||
+                pathname.includes('picture');
+        } catch {
+            return false;
+        }
+    }
 
-                // Масштабируем если нужно
-                if (width > maxWidth || height > maxHeight) {
-                    const ratio = Math.min(maxWidth / width, maxHeight / height);
-                    width = Math.floor(width * ratio);
-                    height = Math.floor(height * ratio);
-                }
+    // Загрузка превью картинки
+    function loadImagePreview(url) {
+        imageUrl = url;
+        imagePreview.src = url;
+        imagePreview.style.display = 'block';
+        counterImage.src = url;
+        counterImage.style.display = 'block';
+        removeImageBtn.style.display = 'block';
+    }
 
-                canvas.width = width;
-                canvas.height = height;
-                ctx.drawImage(img, 0, 0, width, height);
-
-                // Получаем сжатое изображение
-                imageData = canvas.toDataURL('image/jpeg', 0.8);
-                imagePreview.src = imageData;
-                imagePreview.style.display = 'block';
-                counterImage.src = imageData;
-                counterImage.style.display = 'block';
-                removeImageBtn.style.display = 'block';
-
-                showNotification('Картинка загружена и оптимизирована');
-            };
-            img.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
+    // Обработчик ошибки загрузки картинки
+    function handleImageError() {
+        showNotification('Ошибка загрузки картинки', 'error');
+        counterImage.style.display = 'none';
     }
 
     // Обработчик кнопки удаления картинки
     removeImageBtn.addEventListener('click', function() {
-        imageData = null;
+        imageUrl = null;
         imagePreview.style.display = 'none';
         counterImage.style.display = 'none';
         removeImageBtn.style.display = 'none';
-        imageUpload.value = '';
+        imageUrlInput.value = '';
         showNotification('Картинка удалена');
     });
 
@@ -526,8 +478,7 @@
 
         // Устанавливаем название и картинку
         counterTitle.textContent = counterName;
-        if (imageData) {
-            counterImage.src = imageData;
+        if (imageUrl) {
             counterImage.style.display = 'block';
         } else {
             counterImage.style.display = 'none';
@@ -550,8 +501,8 @@
     function startAndShare() {
         startCounter();
         if (counterMode.style.display === 'block') {
-            generateShareLink();
-            copyToClipboard(generateShareLink());
+            const shareUrl = generateShareLink();
+            copyToClipboard(shareUrl);
             showNotification('Счётчик запущен и ссылка скопирована!');
         }
     }
@@ -595,32 +546,37 @@
 
         document.getElementById('info').innerHTML =
             `Прошло: ${elapsedDays}д ${elapsedHours}ч ${elapsedMinutes}м ${elapsedSecs}с<br>` +
-            `(${initialAmount.toFixed(2)} с ${formattedDate} под ${annualRate}%)`;
+            `(${formatNumber(initialAmount)} с ${formattedDate} под ${annualRate}%)`;
     }
 
     function updateDisplay(amount) {
         const percentageElement = document.getElementById('percentageDisplay');
 
-        // Форматируем число с двумя знаками после запятой
-        const formattedAmount = amount.toFixed(2);
+        // Форматируем число с разделителями тысяч
+        const formattedAmount = formatNumber(amount);
 
         // Плавное изменение числа
         percentageElement.textContent = formattedAmount;
     }
 
+    // Форматирование чисел с разделителями тысяч
+    function formatNumber(number) {
+        return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ');
+    }
+
     function generateShareLink() {
         const baseUrl = window.location.origin + window.location.pathname;
         const params = new URLSearchParams({
-            name: encodeURIComponent(counterName),
+            name: counterName,
             startDate: document.getElementById('startDate').value,
             amount: initialAmount,
             rate: annualRate,
             autoStart: 'true'
         });
 
-        // Добавляем картинку если есть
-        if (imageData) {
-            params.set('image', imageData);
+        // Добавляем ссылку на картинку если есть
+        if (imageUrl) {
+            params.set('image', encodeURIComponent(imageUrl));
         }
 
         const shareUrl = `${baseUrl}?${params.toString()}`;
@@ -665,7 +621,7 @@
     }
 
     // Инициализация при загрузке
-    window.onload = initFromURL;
+    window.onload = init;
 </script>
 </body>
 </html>
