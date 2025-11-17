@@ -2,809 +2,965 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>💰 Процентный счётчик</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Процентный счётчик</title>
     <style>
         :root {
-            --primary: #6C63FF;
-            --primary-light: #8A84FF;
-            --primary-dark: #5752CC;
-            --secondary: #FF6584;
-            --accent: #00D4AA;
-            --dark: #2A2D3E;
-            --light: #F7F9FC;
-            --gray: #A0A4B8;
-            --border-radius: 16px;
-            --shadow: 0 10px 30px rgba(108, 99, 255, 0.15);
-            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            --bg-gradient-start: #667eea;
+            --bg-gradient-end: #764ba2;
+            --primary: #667eea;
+            --primary-dark: #4a5bd4;
+            --secondary: #eef2ff;
+            --danger: #e53e3e;
+            --success: #38a169;
+            --text-main: #1f2933;
+            --text-muted: #6b7280;
+            --card-bg: #ffffff;
+            --border-radius-lg: 24px;
+            --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.25);
         }
 
         * {
-            margin: 0;
-            padding: 0;
             box-sizing: border-box;
         }
 
         body {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            margin: 0;
             min-height: 100vh;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
             display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            color: var(--text-main);
+        }
+
+        .app {
+            width: 100%;
+            max-width: 960px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            padding: clamp(1.5rem, 3vw, 2.5rem);
+            max-width: 640px;
+            margin: 0 auto;
+        }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header h1 {
+            margin: 0;
+            font-size: clamp(1.4rem, 3vw, 1.8rem);
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .card-header p {
+            margin: 0.4rem 0 0;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Формы / настройки */
+
+        .form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: 0.35rem;
+        }
+
+        .field label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-muted);
+        }
+
+        .field input {
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            padding: 0.55rem 0.75rem;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.15s ease, box-shadow 0.15s ease;
+        }
+
+        .field input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 1px rgba(102, 126, 234, 0.45);
+        }
+
+        .field input[type="number"]::-webkit-outer-spin-button,
+        .field input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .field input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        .row {
+            display: flex;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+        }
+
+        .row > .col {
+            flex: 1 1 0;
+            min-width: 0;
+        }
+
+        .image-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            align-items: flex-end;
+        }
+
+        .image-row .field {
+            flex: 1 1 200px;
+        }
+
+        .image-buttons {
+            display: flex;
+            flex-direction: row;
+            gap: 0.4rem;
+            flex-wrap: wrap;
+        }
+
+        .image-buttons .btn {
+            white-space: nowrap;
+        }
+
+        .image-preview-wrapper {
+            margin-top: 0.5rem;
+            display: none;
             justify-content: center;
             align-items: center;
-            padding: 20px;
-            font-family: 'Montserrat', sans-serif;
-            color: var(--dark);
         }
 
-        .container {
-            background-color: var(--light);
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            width: 100%;
-            max-width: 700px;
-            overflow: hidden;
-            transition: var(--transition);
+        .image-preview-wrapper.visible {
+            display: flex;
         }
 
-        .page {
-            padding: 35px;
-            display: none;
-        }
-
-        .active {
+        .image-preview-wrapper img {
+            max-width: 100%;
+            max-height: 300px;
+            object-fit: contain;
             display: block;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
+        .actions {
+            margin-top: 0.75rem;
+            display: flex;
+            justify-content: flex-end;
         }
 
-        h1 {
-            font-size: 2.2rem;
-            margin-bottom: 10px;
-            color: var(--primary);
-            font-weight: 700;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        /* Кнопки */
 
-        h2 {
-            font-size: 1.5rem;
-            margin-bottom: 25px;
-            color: var(--dark);
-            font-weight: 600;
-            position: relative;
-            display: inline-block;
-        }
-
-        h2:after {
-            content: '';
-            position: absolute;
-            bottom: -8px;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: var(--accent);
-            border-radius: 2px;
-        }
-
-        .form-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-weight: 500;
-            color: var(--dark);
-            font-size: 0.95rem;
-        }
-
-        input, button {
-            width: 100%;
-            padding: 14px 18px;
-            border-radius: 10px;
-            border: 2px solid #E6E9F0;
-            font-size: 16px;
-            transition: var(--transition);
-            font-family: 'Montserrat', sans-serif;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
-        }
-
-        button {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
+        .btn {
+            border-radius: 999px;
             border: none;
+            padding: 0.55rem 1.3rem;
+            font-size: 0.95rem;
+            font-weight: 500;
             cursor: pointer;
-            font-weight: 600;
-            margin-top: 10px;
-            position: relative;
-            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            transition: background-color 0.15s ease, transform 0.08s ease, box-shadow 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+            user-select: none;
         }
 
-        button:after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--primary-light), var(--primary));
-            opacity: 0;
-            transition: var(--transition);
+        .btn:active {
+            transform: translateY(1px);
         }
 
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 7px 15px rgba(108, 99, 255, 0.3);
-        }
-
-        button:hover:after {
-            opacity: 1;
-        }
-
-        button span {
-            position: relative;
-            z-index: 1;
-        }
-
-        button.secondary {
-            background: var(--light);
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
-
-        button.secondary:hover {
+        .btn-primary {
             background: var(--primary);
-            color: white;
+            color: #ffffff;
+            box-shadow: 0 8px 18px rgba(102, 126, 234, 0.35);
         }
 
-        .image-preview {
-            margin-top: 15px;
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: var(--primary);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid #cbd5f5;
+            color: var(--primary);
+        }
+
+        .btn-secondary:hover,
+        .btn-outline:hover {
+            background: rgba(102, 126, 234, 0.06);
+        }
+
+        .btn-icon {
+            font-size: 1.1rem;
+            line-height: 1;
+        }
+
+        .btn:focus-visible {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        /* Режим счётчика */
+
+        .counter {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
             text-align: center;
-            display: none;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-        }
-
-        .image-preview img {
-            max-width: 100%;
-            max-height: 250px;
-            object-fit: contain;
-        }
-
-        .counter-display {
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        .counter-image {
-            max-width: 100%;
-            max-height: 320px;
-            margin: 0 auto 25px;
-            display: none;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .counter-image img {
-            max-width: 100%;
-            max-height: 320px;
-            object-fit: contain;
         }
 
         .counter-title {
-            font-size: 2rem;
-            margin-bottom: 30px;
-            color: var(--primary);
+            margin: 0;
+            font-size: clamp(1.4rem, 3.1vw, 2rem);
             font-weight: 700;
+            color: var(--text-main);
         }
 
-        .counter-value {
-            font-family: 'Roboto Mono', monospace;
-            font-size: clamp(2.8rem, 6vw, 5rem);
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--primary);
-            overflow: hidden;
-            min-height: 1.2em;
-            letter-spacing: -1px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .counter-image-wrapper {
+            margin-top: 0.4rem;
+            display: none;
+            justify-content: center;
+            align-items: center;
         }
 
-        .counter-info {
-            margin-bottom: 12px;
-            font-size: 1.2rem;
-            color: var(--dark);
-            font-weight: 500;
-        }
-
-        .counter-details {
-            color: var(--gray);
-            font-size: 1rem;
-            margin-bottom: 10px;
-        }
-
-        .counter-controls {
+        .counter-image-wrapper.visible {
             display: flex;
-            gap: 15px;
-            margin-top: 35px;
         }
 
-        .counter-controls button {
-            flex: 1;
+        .counter-image-wrapper img {
+            max-width: 100%;
+            max-height: 320px;
+            object-fit: contain;
+            display: block;
         }
 
-        .notification {
+        .counter-main-value {
+            margin-top: 0.9rem;
+            font-family: "Courier New", monospace;
+            font-weight: 700;
+            font-size: clamp(2.5rem, 6vw, 4.5rem);
+            letter-spacing: 0.03em;
+            color: var(--text-main);
+            word-break: break-all;
+        }
+
+        .counter-info-line {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            margin-top: 0.3rem;
+        }
+
+        .counter-info-line.secondary {
+            font-size: 0.9rem;
+        }
+
+        .counter-actions {
+            margin-top: 1.1rem;
+            display: flex;
+            gap: 0.6rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Toast-уведомления */
+
+        .toast-container {
             position: fixed;
-            top: 25px;
-            right: 25px;
-            padding: 16px 22px;
+            top: 16px;
+            right: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 9999;
+        }
+
+        .toast {
+            min-width: 220px;
+            max-width: 320px;
+            padding: 0.7rem 1rem;
             border-radius: 12px;
-            color: white;
-            font-weight: 600;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-            transform: translateX(150%);
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            z-index: 1000;
+            font-size: 0.9rem;
+            color: #ffffff;
+            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.35);
+            opacity: 0;
+            transform: translateX(110%);
+            transition: opacity 0.18s ease, transform 0.18s ease;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 0.45rem;
         }
 
-        .notification.show {
+        .toast--success {
+            background: var(--success);
+        }
+
+        .toast--error {
+            background: var(--danger);
+        }
+
+        .toast--visible {
+            opacity: 1;
             transform: translateX(0);
         }
 
-        .notification.success {
-            background: linear-gradient(135deg, var(--accent), #00B894);
+        .toast-icon {
+            font-size: 1rem;
         }
 
-        .notification.error {
-            background: linear-gradient(135deg, var(--secondary), #E84393);
-        }
-
-        .notification-icon {
-            font-size: 1.2rem;
-        }
-
-        .image-controls {
-            display: flex;
-            gap: 12px;
-        }
-
-        .image-controls button {
-            flex: 1;
-        }
-
-        .form-row {
-            display: flex;
-            gap: 20px;
-        }
-
-        .form-row .form-group {
-            flex: 1;
-        }
-
-        .tag {
-            display: inline-block;
-            background: rgba(108, 99, 255, 0.1);
-            color: var(--primary);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 500;
-            margin-left: 8px;
-        }
+        /* Адаптивность */
 
         @media (max-width: 768px) {
-            .page {
-                padding: 25px;
+            .card {
+                padding: 1.4rem;
+                border-radius: 20px;
             }
 
-            .counter-controls {
+            .image-buttons {
+                width: 100%;
+                justify-content: flex-start;
+            }
+
+            .actions {
+                justify-content: stretch;
+            }
+
+            .actions .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .counter-actions {
                 flex-direction: column;
             }
 
-            .counter-image img {
-                max-height: 250px;
+            .counter-actions .btn {
+                width: 100%;
             }
 
-            .form-row {
-                flex-direction: column;
-                gap: 0;
+            .image-preview-wrapper img,
+            .counter-image-wrapper img {
+                max-height: 260px;
             }
         }
 
         @media (max-width: 480px) {
-            .page {
-                padding: 20px;
+            .card {
+                padding: 1.2rem;
+                border-radius: 18px;
             }
 
-            h1 {
-                font-size: 1.8rem;
+            .card-header p {
+                font-size: 0.85rem;
             }
 
-            h2 {
-                font-size: 1.3rem;
+            .counter-main-value {
+                font-size: clamp(2.3rem, 8vw, 3.2rem);
             }
-        }
 
-        /* Анимация загрузки для изображений */
-        .loading {
-            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-            background-size: 200% 100%;
-            animation: loading 1.5s infinite;
-        }
-
-        @keyframes loading {
-            0% {
-                background-position: 200% 0;
+            .image-preview-wrapper img,
+            .counter-image-wrapper img {
+                max-height: 240px;
             }
-            100% {
-                background-position: -200% 0;
-            }
-        }
-
-        /* Анимация появления */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .fade-in {
-            animation: fadeIn 0.5s ease forwards;
         }
     </style>
 </head>
 <body>
-<div class="container">
-    <!-- Страница настроек -->
-    <div id="settings-page" class="page active">
-        <div class="header">
-            <h1>💰 Процентный счётчик</h1>
-            <p>Создайте свой счётчик сложных процентов</p>
-        </div>
+<div class="app">
+    <div class="card">
+        <!-- Режим настройки -->
+        <section id="settingsView">
+            <header class="card-header">
+                <h1>Процентный счётчик</h1>
+                <p>Настрой параметры, сгенерируй ссылку и наблюдай рост суммы по сложным процентам.</p>
+            </header>
+            <form id="settingsForm" class="form" novalidate>
+                <div class="field">
+                    <label for="nameInput">Название счётчика</label>
+                    <input id="nameInput" type="text" placeholder="Например: Мой капитал 2030">
+                </div>
 
-        <h2>Настройки</h2>
+                <div class="image-row">
+                    <div class="field">
+                        <label for="imageInput">Ссылка на картинку</label>
+                        <input id="imageInput" type="url" placeholder="https://example.com/image.webp">
+                    </div>
+                    <div class="image-buttons">
+                        <button type="button" id="loadImageBtn" class="btn btn-secondary">
+                            <span class="btn-icon">🖼️</span><span>Загрузить</span>
+                        </button>
+                        <button type="button" id="clearImageBtn" class="btn btn-outline">
+                            Убрать
+                        </button>
+                    </div>
+                </div>
 
-        <div class="form-group">
-            <label for="counter-name">Название счётчика <span class="tag">Обязательно</span></label>
-            <input type="text" id="counter-name" placeholder="Введите название" value="Мой инвестиционный счёт">
-        </div>
+                <div id="imagePreviewWrapper" class="image-preview-wrapper">
+                    <img id="imagePreview" alt="Предпросмотр картинки">
+                </div>
 
-        <div class="form-group">
-            <label for="image-url">Ссылка на картинку</label>
-            <input type="url" id="image-url" placeholder="https://example.com/image.jpg" value="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80">
-            <div class="image-controls">
-                <button id="load-image" class="secondary"><span>🖼️ Загрузить</span></button>
-                <button id="remove-image" class="secondary"><span>❌ Убрать картинку</span></button>
+                <div class="row">
+                    <div class="col field">
+                        <label for="startDateInput">Дата и время начала</label>
+                        <input id="startDateInput" type="datetime-local">
+                    </div>
+                    <div class="col field">
+                        <label for="amountInput">Начальная сумма</label>
+                        <input id="amountInput" type="number" inputmode="decimal" placeholder="1000000">
+                    </div>
+                </div>
+
+                <div class="field">
+                    <label for="rateInput">Годовая ставка, % (поддерживаются запятая и точка)</label>
+                    <input id="rateInput" type="text" placeholder="Например: 10 или 12,5">
+                </div>
+
+                <div class="actions">
+                    <button type="button" id="startCounterBtn" class="btn btn-primary">
+                        <span class="btn-icon">▶️</span><span>Запустить счётчик</span>
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <!-- Режим счётчика -->
+        <section id="counterView" class="counter hidden">
+            <h2 id="counterTitle" class="counter-title"></h2>
+
+            <div id="counterImageWrapper" class="counter-image-wrapper">
+                <img id="counterImage" alt="">
             </div>
-            <div id="image-preview" class="image-preview">
-                <img src="" alt="Предпросмотр">
+
+            <div class="counter-main-value" id="mainAmount">0</div>
+
+            <div class="counter-info-line" id="elapsedInfo">Прошло: 0д 0ч 0м 0с</div>
+            <div class="counter-info-line secondary" id="detailsInfo"></div>
+
+            <div class="counter-actions">
+                <button type="button" id="backToSettingsBtn" class="btn btn-secondary">
+                    ⚙️ Настройки
+                </button>
+                <button type="button" id="shareBtn" class="btn btn-outline">
+                    🔗 Поделиться
+                </button>
             </div>
-        </div>
-
-        <div class="form-row">
-            <div class="form-group">
-                <label for="start-date">Дата и время начала <span class="tag">Обязательно</span></label>
-                <input type="datetime-local" id="start-date">
-            </div>
-
-            <div class="form-group">
-                <label for="initial-amount">Начальная сумма</label>
-                <input type="number" id="initial-amount" value="1000000" min="0" step="1000">
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label for="annual-rate">Годовая ставка (%) <span class="tag">Обязательно</span></label>
-            <input type="text" id="annual-rate" placeholder="Например: 10.5" value="12.5">
-        </div>
-
-        <button id="start-counter"><span>🚀 Запустить счётчик</span></button>
-    </div>
-
-    <!-- Страница счётчика -->
-    <div id="counter-page" class="page">
-        <div id="counter-image" class="counter-image">
-            <img src="" alt="Изображение счётчика">
-        </div>
-
-        <h2 id="counter-title" class="counter-title"></h2>
-
-        <div class="counter-display">
-            <div id="counter-value" class="counter-value">0.00</div>
-            <div id="counter-info" class="counter-info"></div>
-            <div id="counter-details" class="counter-details"></div>
-        </div>
-
-        <div class="counter-controls">
-            <button id="back-to-settings" class="secondary"><span>⚙️ Настройки</span></button>
-            <button id="share-counter"><span>📤 Поделиться</span></button>
-        </div>
+        </section>
     </div>
 </div>
 
-<div id="notification" class="notification">
-    <span class="notification-icon">💫</span>
-    <span class="notification-text"></span>
-</div>
+<div id="toastContainer" class="toast-container"></div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Элементы страницы настроек
-        const settingsPage = document.getElementById('settings-page');
-        const counterPage = document.getElementById('counter-page');
-        const counterNameInput = document.getElementById('counter-name');
-        const imageUrlInput = document.getElementById('image-url');
-        const loadImageBtn = document.getElementById('load-image');
-        const removeImageBtn = document.getElementById('remove-image');
-        const imagePreview = document.getElementById('image-preview');
-        const startDateInput = document.getElementById('start-date');
-        const initialAmountInput = document.getElementById('initial-amount');
-        const annualRateInput = document.getElementById('annual-rate');
-        const startCounterBtn = document.getElementById('start-counter');
+    (function () {
+        "use strict";
 
-        // Элементы страницы счётчика
-        const counterImage = document.getElementById('counter-image');
-        const counterTitle = document.getElementById('counter-title');
-        const counterValue = document.getElementById('counter-value');
-        const counterInfo = document.getElementById('counter-info');
-        const counterDetails = document.getElementById('counter-details');
-        const backToSettingsBtn = document.getElementById('back-to-settings');
-        const shareCounterBtn = document.getElementById('share-counter');
+        const MS_PER_SECOND = 1000;
+        const SECONDS_PER_DAY = 86400;
+        const SECONDS_PER_HOUR = 3600;
+        const SECONDS_PER_MINUTE = 60;
+        const SECONDS_PER_YEAR = 365 * 24 * 60 * 60;
 
-        // Уведомление
-        const notification = document.getElementById('notification');
-        const notificationText = notification.querySelector('.notification-text');
+        const state = {
+            name: "Процентный счётчик",
+            imageUrl: "",
+            startDateString: "",
+            startDate: null,
+            initialAmount: 1000000,
+            rate: 10
+        };
 
-        // Установка текущей даты и времени по умолчанию
-        const now = new Date();
-        // Устанавливаем на 30 дней назад для демонстрации
-        const monthAgo = new Date(now);
-        monthAgo.setDate(monthAgo.getDate() - 30);
-        startDateInput.value = monthAgo.toISOString().slice(0, 16);
+        let timerId = null;
 
-        // Загружаем изображение по умолчанию
-        setTimeout(() => {
-            loadDefaultImage();
-        }, 500);
+        // DOM-элементы
+        const settingsView = document.getElementById("settingsView");
+        const counterView = document.getElementById("counterView");
 
-        // Переменные для работы счётчика
-        let updateInterval;
+        const nameInput = document.getElementById("nameInput");
+        const imageInput = document.getElementById("imageInput");
+        const startDateInput = document.getElementById("startDateInput");
+        const amountInput = document.getElementById("amountInput");
+        const rateInput = document.getElementById("rateInput");
 
-        // Загрузка изображения для предпросмотра
-        loadImageBtn.addEventListener('click', function() {
-            const imageUrl = imageUrlInput.value.trim();
+        const imagePreviewWrapper = document.getElementById("imagePreviewWrapper");
+        const imagePreview = document.getElementById("imagePreview");
 
-            if (!imageUrl) {
-                showNotification('Введите URL изображения', 'error');
-                return;
-            }
+        const loadImageBtn = document.getElementById("loadImageBtn");
+        const clearImageBtn = document.getElementById("clearImageBtn");
+        const startCounterBtn = document.getElementById("startCounterBtn");
 
-            loadImagePreview(imageUrl);
-        });
+        const counterTitle = document.getElementById("counterTitle");
+        const counterImageWrapper = document.getElementById("counterImageWrapper");
+        const counterImage = document.getElementById("counterImage");
+        const mainAmountEl = document.getElementById("mainAmount");
+        const elapsedInfoEl = document.getElementById("elapsedInfo");
+        const detailsInfoEl = document.getElementById("detailsInfo");
+        const backToSettingsBtn = document.getElementById("backToSettingsBtn");
+        const shareBtn = document.getElementById("shareBtn");
 
-        // Удаление изображения
-        removeImageBtn.addEventListener('click', function() {
-            imagePreview.style.display = 'none';
-            imageUrlInput.value = '';
-            showNotification('Изображение удалено', 'success');
-        });
+        const toastContainer = document.getElementById("toastContainer");
 
-        // Запуск счётчика
-        startCounterBtn.addEventListener('click', function() {
-            // Валидация данных
-            if (!validateForm()) {
-                return;
-            }
+        // ===== Утилиты =====
 
-            // Сохранение данных
-            const counterData = {
-                name: counterNameInput.value,
-                imageUrl: imageUrlInput.value,
-                startDate: startDateInput.value,
-                initialAmount: parseFloat(initialAmountInput.value),
-                annualRate: parseFloat(annualRateInput.value.replace(',', '.'))
-            };
+        function showToast(message, type) {
+            const toast = document.createElement("div");
+            toast.className = "toast toast--" + (type === "error" ? "error" : "success");
 
-            // Переключение на страницу счётчика
-            switchToCounterPage(counterData);
+            const iconSpan = document.createElement("span");
+            iconSpan.className = "toast-icon";
+            iconSpan.textContent = type === "error" ? "⚠️" : "✅";
 
-            // Копирование ссылки в буфер
-            copyShareUrl(counterData);
-        });
+            const textSpan = document.createElement("span");
+            textSpan.textContent = message;
 
-        // Возврат к настройкам
-        backToSettingsBtn.addEventListener('click', function() {
-            clearInterval(updateInterval);
-            settingsPage.classList.add('active');
-            counterPage.classList.remove('active');
-        });
+            toast.appendChild(iconSpan);
+            toast.appendChild(textSpan);
 
-        // Поделиться счётчиком
-        shareCounterBtn.addEventListener('click', function() {
-            const counterData = getCounterDataFromUrl() || {
-                name: counterTitle.textContent,
-                imageUrl: counterImage.querySelector('img').src,
-                startDate: document.getElementById('start-date').value,
-                initialAmount: parseFloat(document.getElementById('initial-amount').value),
-                annualRate: parseFloat(document.getElementById('annual-rate').value.replace(',', '.'))
-            };
+            toastContainer.appendChild(toast);
 
-            copyShareUrl(counterData);
-        });
-
-        // Загрузка изображения по умолчанию
-        function loadDefaultImage() {
-            const defaultImageUrl = imageUrlInput.value;
-            if (defaultImageUrl) {
-                loadImagePreview(defaultImageUrl);
-            }
-        }
-
-        // Загрузка изображения для предпросмотра
-        function loadImagePreview(imageUrl) {
-            // Очистка параметров из URL для проверки
-            const cleanUrl = imageUrl.split('?')[0];
-
-            if (!isValidImageUrl(cleanUrl)) {
-                showNotification('Некорректный URL изображения', 'error');
-                return;
-            }
-
-            const img = imagePreview.querySelector('img');
-            img.classList.add('loading');
-            imagePreview.style.display = 'block';
-
-            img.onload = function() {
-                img.classList.remove('loading');
-                showNotification('Изображение загружено', 'success');
-            };
-
-            img.onerror = function() {
-                img.classList.remove('loading');
-                imagePreview.style.display = 'none';
-                showNotification('Ошибка загрузки изображения', 'error');
-            };
-
-            img.src = imageUrl;
-        }
-
-        // Валидация формы
-        function validateForm() {
-            if (!counterNameInput.value.trim()) {
-                showNotification('Введите название счётчика', 'error');
-                return false;
-            }
-
-            if (!startDateInput.value) {
-                showNotification('Укажите дату начала', 'error');
-                return false;
-            }
-
-            const startDate = new Date(startDateInput.value);
-            if (startDate > new Date()) {
-                showNotification('Дата начала не может быть в будущем', 'error');
-                return false;
-            }
-
-            if (!initialAmountInput.value || parseFloat(initialAmountInput.value) <= 0) {
-                showNotification('Введите корректную начальную сумму', 'error');
-                return false;
-            }
-
-            const rate = annualRateInput.value.replace(',', '.');
-            if (!rate || isNaN(parseFloat(rate)) || parseFloat(rate) <= 0) {
-                showNotification('Введите корректную годовую ставку', 'error');
-                return false;
-            }
-
-            return true;
-        }
-
-        // Переключение на страницу счётчика
-        function switchToCounterPage(counterData) {
-            // Обновление данных на странице счётчика
-            counterTitle.textContent = counterData.name;
-
-            if (counterData.imageUrl) {
-                const img = counterImage.querySelector('img');
-                img.src = counterData.imageUrl;
-                counterImage.style.display = 'block';
-
-                img.onerror = function() {
-                    counterImage.style.display = 'none';
-                };
-            } else {
-                counterImage.style.display = 'none';
-            }
-
-            // Переключение страниц
-            settingsPage.classList.remove('active');
-            counterPage.classList.add('active');
-
-            // Добавляем анимацию появления
-            const elements = counterPage.querySelectorAll('.counter-title, .counter-value, .counter-info, .counter-details, .counter-controls');
-            elements.forEach((el, index) => {
-                el.classList.add('fade-in');
-                el.style.animationDelay = `${index * 0.1}s`;
+            requestAnimationFrame(() => {
+                toast.classList.add("toast--visible");
             });
 
-            // Запуск обновления счётчика
-            updateCounter(counterData);
-            updateInterval = setInterval(() => updateCounter(counterData), 100);
-        }
-
-        // Обновление счётчика
-        function updateCounter(counterData) {
-            const startDate = new Date(counterData.startDate);
-            const now = new Date();
-            const elapsedSeconds = Math.max(0, (now - startDate) / 1000);
-
-            // Расчет текущей суммы по формуле сложных процентов
-            const elapsedYears = elapsedSeconds / (365 * 24 * 60 * 60);
-            const currentAmount = counterData.initialAmount *
-                Math.pow(1 + counterData.annualRate / 100, elapsedYears);
-
-            // Форматирование времени
-            const days = Math.floor(elapsedSeconds / (24 * 60 * 60));
-            const hours = Math.floor((elapsedSeconds % (24 * 60 * 60)) / (60 * 60));
-            const minutes = Math.floor((elapsedSeconds % (60 * 60)) / 60);
-            const seconds = Math.floor(elapsedSeconds % 60);
-
-            // Обновление отображения
-            animateNumber(counterValue, currentAmount);
-            counterInfo.textContent = `Прошло: ${days}д ${hours}ч ${minutes}м ${seconds}с`;
-
-            const formattedDate = startDate.toLocaleDateString('ru-RU');
-            const formattedInitialAmount = formatNumber(counterData.initialAmount);
-            counterDetails.textContent =
-                `(начальная сумма ${formattedInitialAmount} с ${formattedDate} под ${counterData.annualRate}%)`;
-        }
-
-        // Анимация числа
-        function animateNumber(element, targetValue) {
-            const currentText = element.textContent.replace(/\s/g, '').replace(',', '.');
-            const currentValue = parseFloat(currentText) || 0;
-
-            if (Math.abs(currentValue - targetValue) < 0.01) {
-                element.textContent = formatCurrency(targetValue);
-                return;
-            }
-
-            // Плавное изменение значения
-            const diff = targetValue - currentValue;
-            const change = diff * 0.1; // 10% от разницы
-
-            element.textContent = formatCurrency(currentValue + change);
-        }
-
-        // Форматирование валюты (с копейками и разделителями тысяч)
-        function formatCurrency(num) {
-            // Форматируем с двумя знаками после запятой
-            const formatted = num.toFixed(2);
-
-            // Разделяем на целую и дробную части
-            const parts = formatted.split('.');
-            let integerPart = parts[0];
-            const decimalPart = parts[1];
-
-            // Добавляем разделители тысяч
-            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-
-            return `${integerPart}.${decimalPart}`;
-        }
-
-        // Форматирование числа (без копеек)
-        function formatNumber(num) {
-            return num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
-        }
-
-        // Проверка валидности URL изображения
-        function isValidImageUrl(url) {
-            // Разрешаем все URL, так как многие содержат параметры
-            // Более строгая проверка может блокировать рабочие URL
-            return url.length > 0;
-        }
-
-        // Показать уведомление
-        function showNotification(message, type) {
-            notificationText.textContent = message;
-            notification.className = `notification ${type}`;
-            notification.classList.add('show');
-
-            // Обновляем иконку в зависимости от типа уведомления
-            const icon = notification.querySelector('.notification-icon');
-            icon.textContent = type === 'success' ? '✅' : '❌';
-
             setTimeout(() => {
-                notification.classList.remove('show');
+                toast.classList.remove("toast--visible");
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.parentNode.removeChild(toast);
+                    }
+                }, 200);
             }, 3000);
         }
 
-        // Копирование ссылки для общего доступа
-        function copyShareUrl(counterData) {
-            const params = new URLSearchParams();
-            params.set('name', counterData.name);
-            if (counterData.imageUrl) params.set('image', encodeURIComponent(counterData.imageUrl));
-            params.set('startDate', counterData.startDate);
-            params.set('amount', counterData.initialAmount);
-            params.set('rate', counterData.annualRate);
-            params.set('autoStart', 'true');
+        function getNowAsLocalInputString() {
+            const now = new Date();
+            const pad = (n) => n.toString().padStart(2, "0");
 
-            const shareUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+            const year = now.getFullYear();
+            const month = pad(now.getMonth() + 1);
+            const day = pad(now.getDate());
+            const hours = pad(now.getHours());
+            const minutes = pad(now.getMinutes());
 
-            navigator.clipboard.writeText(shareUrl)
-                .then(() => {
-                    showNotification('Ссылка скопирована в буфер!', 'success');
-                })
-                .catch(() => {
-                    // Fallback для старых браузеров
-                    const textArea = document.createElement('textarea');
-                    textArea.value = shareUrl;
-                    document.body.appendChild(textArea);
-                    textArea.select();
-                    document.execCommand('copy');
-                    document.body.removeChild(textArea);
-                    showNotification('Ссылка скопирована в буфер!', 'success');
-                });
+            return year + "-" + month + "-" + day + "T" + hours + ":" + minutes;
         }
 
-        // Получение данных счётчика из URL
-        function getCounterDataFromUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
+        function parseAmount(value) {
+            if (value == null) return NaN;
+            const cleaned = String(value).replace(/\s+/g, "").replace(",", ".");
+            const num = parseFloat(cleaned);
+            return Number.isFinite(num) ? num : NaN;
+        }
 
-            if (!urlParams.has('autoStart')) return null;
+        function parseRate(value) {
+            if (!value) return NaN;
+            const cleaned = String(value)
+                .replace(",", ".")
+                .replace(/[^\d.\-]/g, "");
+            const num = parseFloat(cleaned);
+            return Number.isFinite(num) ? num : NaN;
+        }
+
+        function formatMainNumber(value) {
+            // Основное число — без разделителей тысяч, 2 знака после запятой
+            if (!Number.isFinite(value)) return "0";
+            const fixed = value.toFixed(2);
+            // убираем лишние нули .00 → целое
+            if (fixed.endsWith(".00")) {
+                return fixed.slice(0, -3);
+            }
+            return fixed;
+        }
+
+        function formatAmountInfo(value) {
+            if (!Number.isFinite(value)) return "0";
+            const parts = Math.trunc(value).toString().split("");
+            const res = [];
+            for (let i = 0; i < parts.length; i++) {
+                const idxFromEnd = parts.length - i;
+                res.push(parts[i]);
+                if (idxFromEnd > 1 && idxFromEnd % 3 === 1) {
+                    res.push(" ");
+                }
+            }
+            return res.join("").trim();
+        }
+
+        function formatDateInfo(date) {
+            if (!(date instanceof Date) || isNaN(date.getTime())) return "";
+            const pad = (n) => n.toString().padStart(2, "0");
+            const dd = pad(date.getDate());
+            const mm = pad(date.getMonth() + 1);
+            const yyyy = date.getFullYear();
+            const hh = pad(date.getHours());
+            const min = pad(date.getMinutes());
+            return dd + "." + mm + "." + yyyy + " " + hh + ":" + min;
+        }
+
+        function isValidImageUrl(urlStr) {
+            if (!urlStr) return false;
+            try {
+                const url = new URL(urlStr);
+                if (!/^https?:$/.test(url.protocol)) return false;
+
+                const allowedExt = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
+                const path = url.pathname.toLowerCase();
+                const hasExt = allowedExt.some((ext) => path.endsWith(ext));
+
+                const host = url.hostname.toLowerCase();
+                const popularHosts = [
+                    "imgur.com",
+                    "i.imgur.com",
+                    "ibb.co",
+                    "i.ibb.co",
+                    "postimg.cc",
+                    "vk.com",
+                    "userapi.com",
+                    "sun9"
+                ];
+                const isPopular = popularHosts.some((h) => host.includes(h));
+
+                return hasExt || isPopular;
+            } catch (e) {
+                return false;
+            }
+        }
+
+        function loadPreviewImage(url) {
+            if (!url) {
+                showToast("Введите ссылку на картинку.", "error");
+                return;
+            }
+
+            if (!isValidImageUrl(url)) {
+                showToast("Некорректный URL картинки.", "error");
+                return;
+            }
+
+            imagePreview.onload = function () {
+                imagePreviewWrapper.classList.add("visible");
+            };
+            imagePreview.onerror = function () {
+                imagePreviewWrapper.classList.remove("visible");
+                imagePreview.removeAttribute("src");
+                showToast("Не удалось загрузить картинку.", "error");
+            };
+            imagePreview.src = url;
+        }
+
+        function clearPreviewImage() {
+            imageInput.value = "";
+            imagePreviewWrapper.classList.remove("visible");
+            imagePreview.removeAttribute("src");
+            state.imageUrl = "";
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                return navigator.clipboard.writeText(text).then(
+                    () => true,
+                    () => false
+                );
+            }
 
             try {
-                return {
-                    name: urlParams.get('name') || 'Мой инвестиционный счёт',
-                    imageUrl: urlParams.has('image') ? decodeURIComponent(urlParams.get('image')) : '',
-                    startDate: urlParams.get('startDate'),
-                    initialAmount: parseFloat(urlParams.get('amount')),
-                    annualRate: parseFloat(urlParams.get('rate'))
-                };
+                const textarea = document.createElement("textarea");
+                textarea.value = text;
+                textarea.style.position = "fixed";
+                textarea.style.opacity = "0";
+                document.body.appendChild(textarea);
+                textarea.focus();
+                textarea.select();
+                const result = document.execCommand("copy");
+                document.body.removeChild(textarea);
+                return Promise.resolve(result);
             } catch (e) {
-                console.error('Ошибка при разборе параметров URL:', e);
-                return null;
+                return Promise.resolve(false);
             }
         }
 
-        // Автозапуск счётчика при наличии параметров в URL
-        const urlCounterData = getCounterDataFromUrl();
-        if (urlCounterData) {
-            // Заполняем форму данными из URL
-            counterNameInput.value = urlCounterData.name;
-            imageUrlInput.value = urlCounterData.imageUrl;
-            startDateInput.value = urlCounterData.startDate;
-            initialAmountInput.value = urlCounterData.initialAmount;
-            annualRateInput.value = urlCounterData.annualRate;
+        function buildUrlFromState() {
+            const params = new URLSearchParams();
+            params.set("name", state.name);
+            if (state.imageUrl) {
+                params.set("image", state.imageUrl);
+            }
+            if (state.startDateString) {
+                params.set("startDate", state.startDateString);
+            }
+            params.set("amount", String(state.initialAmount));
+            params.set("rate", String(state.rate).replace(".", ","));
+            params.set("autoStart", "true");
 
-            // Загружаем изображение, если есть
-            if (urlCounterData.imageUrl) {
-                loadImagePreview(urlCounterData.imageUrl);
+            return window.location.origin + window.location.pathname + "?" + params.toString();
+        }
+
+        function computeElapsed(secondsTotal) {
+            const s = Math.max(0, Math.floor(secondsTotal));
+            const days = Math.floor(s / SECONDS_PER_DAY);
+            let rest = s % SECONDS_PER_DAY;
+            const hours = Math.floor(rest / SECONDS_PER_HOUR);
+            rest %= SECONDS_PER_HOUR;
+            const minutes = Math.floor(rest / SECONDS_PER_MINUTE);
+            const seconds = rest % SECONDS_PER_MINUTE;
+
+            return { days, hours, minutes, seconds };
+        }
+
+        function updateCounterDisplay() {
+            if (!state.startDate || isNaN(state.startDate.getTime())) {
+                return;
             }
 
-            // Запускаем счётчик
-            setTimeout(() => {
-                switchToCounterPage(urlCounterData);
-            }, 500);
+            const now = new Date();
+            const elapsedSeconds = Math.max(
+                0,
+                Math.floor((now.getTime() - state.startDate.getTime()) / MS_PER_SECOND)
+            );
+
+            const elapsedYears = elapsedSeconds / SECONDS_PER_YEAR;
+            const annualRate = state.rate;
+            const P = state.initialAmount;
+
+            const growthFactor = Math.pow(1 + annualRate / 100, elapsedYears);
+            const currentAmount = P * growthFactor;
+
+            mainAmountEl.textContent = formatMainNumber(currentAmount);
+
+            const elapsed = computeElapsed(elapsedSeconds);
+            elapsedInfoEl.textContent =
+                "Прошло: " +
+                elapsed.days + "д " +
+                elapsed.hours + "ч " +
+                elapsed.minutes + "м " +
+                elapsed.seconds + "с";
+
+            const startDateStr = formatDateInfo(state.startDate);
+            const initialStr = formatAmountInfo(state.initialAmount);
+            const rateStr = String(state.rate).replace(".", ",");
+
+            detailsInfoEl.textContent =
+                "(" + initialStr + " с " + startDateStr + " под " + rateStr + "%)";
         }
-    });
+
+        function enterCounterMode() {
+            if (timerId !== null) {
+                clearInterval(timerId);
+                timerId = null;
+            }
+
+            counterTitle.textContent = state.name || "Процентный счётчик";
+
+            if (state.imageUrl) {
+                counterImageWrapper.classList.add("visible");
+                counterImage.onload = function () {
+                    // ничего не делаем, просто показать
+                };
+                counterImage.onerror = function () {
+                    counterImageWrapper.classList.remove("visible");
+                    counterImage.removeAttribute("src");
+                    showToast("Не удалось загрузить картинку для счётчика.", "error");
+                };
+                counterImage.src = state.imageUrl;
+            } else {
+                counterImageWrapper.classList.remove("visible");
+                counterImage.removeAttribute("src");
+            }
+
+            settingsView.classList.add("hidden");
+            counterView.classList.remove("hidden");
+
+            updateCounterDisplay();
+            timerId = setInterval(updateCounterDisplay, 1000);
+        }
+
+        function enterSettingsMode() {
+            if (timerId !== null) {
+                clearInterval(timerId);
+                timerId = null;
+            }
+
+            counterView.classList.add("hidden");
+            settingsView.classList.remove("hidden");
+        }
+
+        function applyInputsToState() {
+            const name = (nameInput.value || "").trim();
+            state.name = name || "Процентный счётчик";
+
+            const imageUrl = (imageInput.value || "").trim();
+            state.imageUrl = imageUrl;
+
+            const startDateStr = startDateInput.value || getNowAsLocalInputString();
+            state.startDateString = startDateStr;
+            state.startDate = new Date(startDateStr);
+
+            const amount = parseAmount(amountInput.value || "1000000");
+            const rate = parseRate(rateInput.value);
+
+            state.initialAmount = amount;
+            state.rate = rate;
+
+            return { amount, rate };
+        }
+
+        function initFromUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            if ([...params.keys()].length === 0) {
+                // дефолтные значения
+                const nowStr = getNowAsLocalInputString();
+                startDateInput.value = nowStr;
+                amountInput.value = "1000000";
+                rateInput.value = "";
+                return;
+            }
+
+            const name = params.get("name") || "";
+            const image = params.get("image") || "";
+            const startDate = params.get("startDate") || "";
+            const amount = params.get("amount") || "";
+            const rate = params.get("rate") || "";
+            const autoStartParam = params.get("autoStart") || "";
+
+            if (name) {
+                nameInput.value = name;
+            }
+            if (image) {
+                imageInput.value = image;
+                if (isValidImageUrl(image)) {
+                    loadPreviewImage(image);
+                }
+            }
+            if (startDate) {
+                startDateInput.value = startDate;
+            } else {
+                startDateInput.value = getNowAsLocalInputString();
+            }
+
+            if (amount) {
+                amountInput.value = amount;
+            } else {
+                amountInput.value = "1000000";
+            }
+
+            if (rate) {
+                rateInput.value = rate;
+            }
+
+            const autoStart = autoStartParam.toLowerCase() === "true";
+
+            if (autoStart) {
+                const { amount: parsedAmount, rate: parsedRate } = applyInputsToState();
+
+                if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
+                    showToast("Некорректная начальная сумма в ссылке.", "error");
+                    return;
+                }
+                if (!Number.isFinite(parsedRate)) {
+                    showToast("Некорректная ставка в ссылке.", "error");
+                    return;
+                }
+
+                enterCounterMode();
+            }
+        }
+
+        // ===== Обработчики =====
+
+        loadImageBtn.addEventListener("click", function () {
+            const url = (imageInput.value || "").trim();
+            loadPreviewImage(url);
+        });
+
+        clearImageBtn.addEventListener("click", function () {
+            clearPreviewImage();
+        });
+
+        startCounterBtn.addEventListener("click", function () {
+            const { amount, rate } = applyInputsToState();
+
+            if (!Number.isFinite(amount) || amount <= 0) {
+                showToast("Введите корректную начальную сумму.", "error");
+                return;
+            }
+            if (!Number.isFinite(rate)) {
+                showToast("Введите корректную годовую ставку.", "error");
+                return;
+            }
+
+            const url = buildUrlFromState();
+            try {
+                window.history.replaceState({}, "", url);
+            } catch (e) {
+                // игнорируем, если браузер не позволил
+            }
+
+            copyToClipboard(url).then((ok) => {
+                if (ok) {
+                    showToast("Ссылка на счётчик скопирована в буфер обмена.", "success");
+                } else {
+                    showToast("Не удалось автоматически скопировать ссылку.", "error");
+                }
+            });
+
+            enterCounterMode();
+        });
+
+        backToSettingsBtn.addEventListener("click", function () {
+            enterSettingsMode();
+        });
+
+        shareBtn.addEventListener("click", function () {
+            const currentUrl = window.location.href;
+            copyToClipboard(currentUrl).then((ok) => {
+                if (ok) {
+                    showToast("Текущая ссылка скопирована в буфер обмена.", "success");
+                } else {
+                    showToast("Не удалось скопировать ссылку.", "error");
+                }
+            });
+        });
+
+        // Инициализация
+        document.addEventListener("DOMContentLoaded", function () {
+            initFromUrlParams();
+            if (!startDateInput.value) {
+                startDateInput.value = getNowAsLocalInputString();
+            }
+            if (!amountInput.value) {
+                amountInput.value = "1000000";
+            }
+        });
+    })();
 </script>
 </body>
 </html>
