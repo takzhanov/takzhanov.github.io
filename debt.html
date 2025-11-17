@@ -88,10 +88,6 @@
             background: linear-gradient(135deg, #20c997 0%, #1a9f7a 100%);
         }
 
-        .secondary-btn {
-            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
-        }
-
         .result {
             margin-top: 30px;
             text-align: center;
@@ -109,23 +105,11 @@
             font-family: 'Courier New', monospace;
         }
 
-        .stats {
-            font-size: 1.1em;
-            color: #666;
-            margin-top: 10px;
-            line-height: 1.5;
-        }
-
         .info {
             color: #888;
             font-size: 0.9em;
             margin-top: 10px;
-        }
-
-        .history {
-            color: #999;
-            font-size: 0.8em;
-            margin-top: 5px;
+            line-height: 1.5;
         }
 
         .config-mode {
@@ -136,22 +120,34 @@
             display: none;
         }
 
-        .share-link {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f1f3f4;
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
             border-radius: 10px;
-            word-break: break-all;
-            font-size: 0.9em;
+            margin: 10px auto;
+            display: block;
+            border: 2px solid #ddd;
         }
 
-        .share-link a {
-            color: #667eea;
-            text-decoration: none;
+        .image-preview-small {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-right: 15px;
+            border: 2px solid #ddd;
         }
 
-        .share-link a:hover {
-            text-decoration: underline;
+        .counter-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .counter-title {
+            margin: 0;
         }
 
         .notification {
@@ -182,6 +178,32 @@
             margin-top: 0;
             flex: 1;
         }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-input-button {
+            background: #6c757d;
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -201,6 +223,15 @@
         </div>
 
         <div class="input-group">
+            <label for="imageUpload">Картинка:</label>
+            <div class="file-input-wrapper">
+                <div class="file-input-button">Выбрать картинку</div>
+                <input type="file" id="imageUpload" accept="image/*">
+            </div>
+            <img id="imagePreview" class="image-preview" style="display: none;">
+        </div>
+
+        <div class="input-group">
             <label for="startDate">Дата начала:</label>
             <input type="datetime-local" id="startDate">
         </div>
@@ -215,8 +246,7 @@
             <input type="number" id="interestRate" value="10" step="0.1">
         </div>
 
-        <button onclick="startCounter()">Запустить счётчик</button>
-        <button onclick="startAndShare()" class="share-btn">Автозапуск и поделиться</button>
+        <button onclick="startAndShare()" class="share-btn">Запустить счётчик</button>
 
         <div class="share-link" id="shareLinkContainer" style="display: none;">
             <strong>Ссылка для общего доступа:</strong><br>
@@ -226,13 +256,14 @@
 
     <!-- Режим счётчика -->
     <div class="counter-mode" id="counterMode">
-        <h1 id="counterTitle">💰 Счётчик</h1>
+        <div class="counter-header">
+            <img id="counterImage" class="image-preview-small" style="display: none;">
+            <h1 class="counter-title" id="counterTitle">💰 Счётчик</h1>
+        </div>
 
         <div class="result">
             <div class="percentage" id="percentageDisplay">0.00</div>
-            <div class="stats" id="currentAmount"></div>
             <div class="info" id="info"></div>
-            <div class="history" id="history"></div>
         </div>
 
         <div class="button-group">
@@ -248,6 +279,7 @@
     let initialAmount = 0;
     let annualRate = 0;
     let counterName = "";
+    let imageData = null;
 
     // Элементы DOM
     const configMode = document.getElementById('configMode');
@@ -256,6 +288,9 @@
     const shareLink = document.getElementById('shareLink');
     const counterTitle = document.getElementById('counterTitle');
     const notification = document.getElementById('notification');
+    const imageUpload = document.getElementById('imageUpload');
+    const imagePreview = document.getElementById('imagePreview');
+    const counterImage = document.getElementById('counterImage');
 
     // Инициализация из URL параметров
     function initFromURL() {
@@ -265,6 +300,16 @@
         const urlName = urlParams.get('name');
         if (urlName) {
             document.getElementById('counterName').value = decodeURIComponent(urlName);
+        }
+
+        // Картинка (base64)
+        const urlImage = urlParams.get('image');
+        if (urlImage) {
+            imageData = urlImage;
+            imagePreview.src = urlImage;
+            imagePreview.style.display = 'block';
+            counterImage.src = urlImage;
+            counterImage.style.display = 'block';
         }
 
         // Дата начала
@@ -297,6 +342,23 @@
         }
     }
 
+    // Обработчик загрузки картинки
+    imageUpload.addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                imageData = e.target.result;
+                imagePreview.src = imageData;
+                imagePreview.style.display = 'block';
+                counterImage.src = imageData;
+                counterImage.style.display = 'block';
+                generateShareLink();
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+
     function startCounter() {
         // Получаем значения из полей ввода
         const startDateValue = document.getElementById('startDate').value;
@@ -311,8 +373,12 @@
 
         startTime = new Date(startDateValue);
 
-        // Устанавливаем название
+        // Устанавливаем название и картинку
         counterTitle.textContent = counterName;
+        if (imageData) {
+            counterImage.src = imageData;
+            counterImage.style.display = 'block';
+        }
 
         // Переключаемся в режим счётчика
         configMode.style.display = 'none';
@@ -371,38 +437,22 @@
         const elapsedMinutes = Math.floor((elapsedSeconds % (60 * 60)) / 60);
         const elapsedSecs = Math.floor(elapsedSeconds % 60);
 
-        document.getElementById('info').textContent =
-            `Прошло: ${elapsedDays}д ${elapsedHours}ч ${elapsedMinutes}м ${elapsedSecs}с`;
+        const startDate = new Date(startTime);
+        const formattedDate = startDate.toLocaleDateString('ru-RU');
+
+        document.getElementById('info').innerHTML =
+            `Прошло: ${elapsedDays}д ${elapsedHours}ч ${elapsedMinutes}м ${elapsedSecs}с<br>` +
+            `(${initialAmount.toFixed(2)} с ${formattedDate} под ${annualRate}%)`;
     }
 
     function updateDisplay(amount) {
         const percentageElement = document.getElementById('percentageDisplay');
-        const currentAmountElement = document.getElementById('currentAmount');
-        const historyElement = document.getElementById('history');
 
         // Форматируем число с двумя знаками после запятой
         const formattedAmount = amount.toFixed(2);
 
         // Плавное изменение числа
         percentageElement.textContent = formattedAmount;
-
-        // Дополнительная информация
-        const profit = amount - initialAmount;
-        const profitPercentage = ((profit / initialAmount) * 100).toFixed(2);
-
-        currentAmountElement.innerHTML =
-            `Процент: ${profitPercentage}%<br>Ставка: ${annualRate}%`;
-
-        // История
-        const startDate = new Date(startTime);
-        const formattedDate = startDate.toLocaleDateString('ru-RU');
-        const formattedTime = startDate.toLocaleTimeString('ru-RU', {
-            hour: '2-digit',
-            minute: '2-digit'
-        });
-
-        historyElement.textContent =
-            `(${initialAmount.toFixed(2)} с ${formattedDate} ${formattedTime})`;
     }
 
     function generateShareLink() {
@@ -414,6 +464,11 @@
             rate: annualRate,
             autoStart: 'true'
         });
+
+        // Добавляем картинку если есть
+        if (imageData) {
+            params.set('image', imageData);
+        }
 
         const shareUrl = `${baseUrl}?${params.toString()}`;
         shareLink.href = shareUrl;
