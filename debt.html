@@ -139,7 +139,6 @@
             border-radius: 10px;
             margin: 10px auto;
             display: block;
-            border: 2px solid #ddd;
         }
 
         .counter-image {
@@ -149,7 +148,6 @@
             object-fit: contain;
             border-radius: 15px;
             margin-bottom: 20px;
-            border: 2px solid #ddd;
             display: block;
             margin-left: auto;
             margin-right: auto;
@@ -314,8 +312,11 @@
     <!-- Режим счётчика -->
     <div class="counter-mode" id="counterMode">
         <div class="counter-header">
-            <img id="counterImage" class="counter-image" style="display: none;" onerror="handleImageError()">
             <h1 class="counter-title" id="counterTitle">💰 Счётчик</h1>
+        </div>
+
+        <div class="counter-header-i">
+            <img id="counterImage" class="counter-image" style="display: none;" onerror="handleImageError()">
         </div>
 
         <div class="result">
@@ -552,16 +553,16 @@
     function updateDisplay(amount) {
         const percentageElement = document.getElementById('percentageDisplay');
 
-        // Форматируем число с разделителями тысяч
+        // Форматируем число без разделителей тысяч
         const formattedAmount = formatNumber(amount);
 
         // Плавное изменение числа
         percentageElement.textContent = formattedAmount;
     }
 
-    // Форматирование чисел с разделителями тысяч
+    // Форматирование чисел без разделителей тысяч
     function formatNumber(number) {
-        return number.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$& ');
+        return number.toFixed(2);
     }
 
     function generateShareLink() {
