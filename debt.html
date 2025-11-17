@@ -5,624 +5,590 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Процентный счётчик</title>
     <style>
+        :root {
+            --primary-color: #667eea;
+            --secondary-color: #764ba2;
+            --white: #ffffff;
+            --text-color: #333333;
+            --border-radius: 12px;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --transition: all 0.3s ease;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
+            color: var(--text-color);
         }
 
         .container {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            max-width: 500px;
+            background-color: var(--white);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
             width: 100%;
+            max-width: 600px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .page {
+            padding: 30px;
+            display: none;
+        }
+
+        .active {
+            display: block;
         }
 
         h1 {
             text-align: center;
-            color: #333;
             margin-bottom: 25px;
-            font-size: clamp(1.5em, 4vw, 1.8em);
+            color: var(--primary-color);
+            font-weight: 600;
         }
 
-        .input-group {
+        h2 {
+            margin-bottom: 20px;
+            font-weight: 500;
+            color: var(--secondary-color);
+        }
+
+        .form-group {
             margin-bottom: 20px;
         }
 
         label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
-            font-weight: bold;
+            font-weight: 500;
         }
 
-        input {
+        input, button {
             width: 100%;
-            padding: 12px;
-            border: 2px solid #ddd;
-            border-radius: 10px;
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
             font-size: 16px;
-            transition: border-color 0.3s;
+            transition: var(--transition);
         }
 
         input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
         }
 
         button {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-color: var(--primary-color);
             color: white;
             border: none;
-            border-radius: 10px;
-            font-size: 16px;
-            font-weight: bold;
             cursor: pointer;
-            transition: transform 0.2s;
+            font-weight: 500;
             margin-top: 10px;
         }
 
         button:hover {
+            background-color: var(--secondary-color);
             transform: translateY(-2px);
         }
 
-        .stop-btn {
-            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+        button.secondary {
+            background-color: #f0f0f0;
+            color: var(--text-color);
         }
 
-        .share-btn {
-            background: linear-gradient(135deg, #20c997 0%, #1a9f7a 100%);
-        }
-
-        .remove-btn {
-            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
-            padding: 8px;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
-        .result {
-            margin-top: 25px;
-            text-align: center;
-            padding: 25px;
-            background: #f8f9fa;
-            border-radius: 15px;
-            border: 2px dashed #ddd;
-        }
-
-        .percentage {
-            font-size: clamp(2em, 8vw, 3.5em);
-            font-weight: bold;
-            color: #667eea;
-            margin: 15px 0;
-            font-family: 'Courier New', monospace;
-            word-break: break-all;
-            overflow-wrap: break-word;
-            line-height: 1.1;
-            letter-spacing: -1px;
-        }
-
-        .info {
-            color: #888;
-            font-size: clamp(0.8em, 3vw, 0.9em);
-            margin-top: 10px;
-            line-height: 1.5;
-        }
-
-        .config-mode {
-            display: block;
-        }
-
-        .counter-mode {
-            display: none;
+        button.secondary:hover {
+            background-color: #e0e0e0;
         }
 
         .image-preview {
-            width: 100%;
+            margin-top: 15px;
+            text-align: center;
+            display: none;
+        }
+
+        .image-preview img {
             max-width: 100%;
-            max-height: 200px;
+            max-height: 250px;
+            border-radius: 8px;
             object-fit: contain;
-            border-radius: 10px;
-            margin: 10px auto;
-            display: block;
+        }
+
+        .counter-display {
+            text-align: center;
+            padding: 20px 0;
         }
 
         .counter-image {
-            width: 100%;
-            max-width: 300px;
-            max-height: 250px;
-            object-fit: contain;
-            border-radius: 15px;
-            margin-bottom: 20px;
-            display: block;
-            margin-left: auto;
-            margin-right: auto;
+            max-width: 100%;
+            max-height: 300px;
+            margin: 0 auto 20px;
+            display: none;
         }
 
-        .counter-header {
-            text-align: center;
-            margin-bottom: 20px;
+        .counter-image img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            object-fit: contain;
         }
 
         .counter-title {
-            margin: 0;
-            font-size: clamp(1.4em, 5vw, 1.7em);
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            color: var(--secondary-color);
+        }
+
+        .counter-value {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            overflow: hidden;
+            min-height: 1.2em;
+        }
+
+        .counter-info {
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .counter-details {
+            color: #666;
+            font-size: 1rem;
+        }
+
+        .counter-controls {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
         }
 
         .notification {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: #20c997;
+            padding: 15px 20px;
+            border-radius: 8px;
             color: white;
-            padding: 15px 25px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transform: translateX(400px);
+            font-weight: 500;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(150%);
             transition: transform 0.3s ease;
             z-index: 1000;
-            max-width: 300px;
         }
 
         .notification.show {
             transform: translateX(0);
         }
 
-        .button-group {
+        .notification.success {
+            background-color: #4CAF50;
+        }
+
+        .notification.error {
+            background-color: #F44336;
+        }
+
+        .image-controls {
             display: flex;
             gap: 10px;
-            margin-top: 20px;
         }
 
-        .button-group button {
-            margin-top: 0;
+        .image-controls button {
             flex: 1;
-        }
-
-        .url-input-group {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
-
-        .url-input-group input {
-            flex: 1;
-            margin-bottom: 0;
-        }
-
-        .url-input-group button {
-            width: auto;
-            min-width: 120px;
-            margin-top: 0;
         }
 
         @media (max-width: 480px) {
-            .container {
+            .page {
                 padding: 20px;
-                margin: 10px;
             }
 
-            .percentage {
-                font-size: 2.2em;
-            }
-
-            .counter-image {
-                max-width: 250px;
-                max-height: 200px;
-            }
-
-            .button-group, .url-input-group {
+            .counter-controls {
                 flex-direction: column;
             }
 
-            .url-input-group button {
-                width: 100%;
-            }
-
-            .notification {
-                right: 10px;
-                left: 10px;
-                max-width: none;
-            }
-        }
-
-        @media (min-width: 768px) {
-            .percentage {
-                font-size: 3em;
-            }
-
-            .counter-image {
-                max-width: 350px;
-                max-height: 280px;
-            }
-        }
-
-        @media (min-width: 1200px) {
-            .container {
-                max-width: 550px;
-            }
-
-            .percentage {
-                font-size: 3.2em;
+            .counter-image img {
+                max-height: 250px;
             }
         }
     </style>
 </head>
 <body>
-<!-- Уведомление -->
-<div class="notification" id="notification">
-    Ссылка скопирована в буфер обмена!
-</div>
-
 <div class="container">
-    <!-- Режим настройки -->
-    <div class="config-mode" id="configMode">
-        <h1>⚙️ Настройки</h1>
+    <!-- Страница настроек -->
+    <div id="settings-page" class="page active">
+        <h1>Настройки счётчика</h1>
 
-        <div class="input-group">
-            <label for="counterName">Название:</label>
-            <input type="text" id="counterName" placeholder="Мой инвестиционный счёт" value="Мой инвестиционный счёт">
+        <div class="form-group">
+            <label for="counter-name">Название счётчика</label>
+            <input type="text" id="counter-name" placeholder="Введите название">
         </div>
 
-        <div class="input-group">
-            <label for="imageUrl">Ссылка на картинку:</label>
-            <div class="url-input-group">
-                <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg">
-                <button onclick="loadImageFromUrl()">Загрузить</button>
-            </div>
-
+        <div class="form-group">
+            <label for="image-url">Ссылка на картинку</label>
+            <input type="url" id="image-url" placeholder="https://example.com/image.jpg">
             <div class="image-controls">
-                <img id="imagePreview" class="image-preview" style="display: none;">
-                <button id="removeImageBtn" class="remove-btn" style="display: none;">Убрать картинку</button>
+                <button id="load-image" class="secondary">Загрузить</button>
+                <button id="remove-image" class="secondary">Убрать картинку</button>
+            </div>
+            <div id="image-preview" class="image-preview">
+                <img src="" alt="Предпросмотр">
             </div>
         </div>
 
-        <div class="input-group">
-            <label for="startDate">Дата начала:</label>
-            <input type="datetime-local" id="startDate">
+        <div class="form-group">
+            <label for="start-date">Дата и время начала</label>
+            <input type="datetime-local" id="start-date">
         </div>
 
-        <div class="input-group">
-            <label for="initialAmount">Начальная сумма:</label>
-            <input type="number" id="initialAmount" value="1000000" step="1000">
+        <div class="form-group">
+            <label for="initial-amount">Начальная сумма</label>
+            <input type="number" id="initial-amount" value="1000000" min="0">
         </div>
 
-        <div class="input-group">
-            <label for="interestRate">Ставка (%):</label>
-            <input type="text" id="interestRate" value="10">
+        <div class="form-group">
+            <label for="annual-rate">Годовая ставка (%)</label>
+            <input type="text" id="annual-rate" placeholder="10.5">
         </div>
 
-        <button onclick="startAndShare()" class="share-btn">Запустить счётчик</button>
+        <button id="start-counter">Запустить счётчик</button>
     </div>
 
-    <!-- Режим счётчика -->
-    <div class="counter-mode" id="counterMode">
-        <div class="counter-header">
-            <h1 class="counter-title" id="counterTitle">💰 Счётчик</h1>
+    <!-- Страница счётчика -->
+    <div id="counter-page" class="page">
+        <div id="counter-image" class="counter-image">
+            <img src="" alt="Изображение счётчика">
         </div>
 
-        <div class="counter-header-i">
-            <img id="counterImage" class="counter-image" style="display: none;" onerror="handleImageError()">
+        <h2 id="counter-title" class="counter-title"></h2>
+
+        <div class="counter-display">
+            <div id="counter-value" class="counter-value">0</div>
+            <div id="counter-info" class="counter-info"></div>
+            <div id="counter-details" class="counter-details"></div>
         </div>
 
-        <div class="result">
-            <div class="percentage" id="percentageDisplay">0.00</div>
-            <div class="info" id="info"></div>
-        </div>
-
-        <div class="button-group">
-            <button onclick="stopCounter()" class="stop-btn">Настройки</button>
-            <button onclick="shareCounter()" class="share-btn">Поделиться</button>
+        <div class="counter-controls">
+            <button id="back-to-settings" class="secondary">Настройки</button>
+            <button id="share-counter">Поделиться</button>
         </div>
     </div>
 </div>
+
+<div id="notification" class="notification"></div>
 
 <script>
-    let counterInterval = null;
-    let startTime = null;
-    let initialAmount = 0;
-    let annualRate = 0;
-    let counterName = "";
-    let imageUrl = null;
+    document.addEventListener('DOMContentLoaded', function() {
+        // Элементы страницы настроек
+        const settingsPage = document.getElementById('settings-page');
+        const counterPage = document.getElementById('counter-page');
+        const counterNameInput = document.getElementById('counter-name');
+        const imageUrlInput = document.getElementById('image-url');
+        const loadImageBtn = document.getElementById('load-image');
+        const removeImageBtn = document.getElementById('remove-image');
+        const imagePreview = document.getElementById('image-preview');
+        const startDateInput = document.getElementById('start-date');
+        const initialAmountInput = document.getElementById('initial-amount');
+        const annualRateInput = document.getElementById('annual-rate');
+        const startCounterBtn = document.getElementById('start-counter');
 
-    // Элементы DOM
-    const configMode = document.getElementById('configMode');
-    const counterMode = document.getElementById('counterMode');
-    const counterTitle = document.getElementById('counterTitle');
-    const notification = document.getElementById('notification');
-    const imagePreview = document.getElementById('imagePreview');
-    const counterImage = document.getElementById('counterImage');
-    const removeImageBtn = document.getElementById('removeImageBtn');
-    const imageUrlInput = document.getElementById('imageUrl');
+        // Элементы страницы счётчика
+        const counterImage = document.getElementById('counter-image');
+        const counterTitle = document.getElementById('counter-title');
+        const counterValue = document.getElementById('counter-value');
+        const counterInfo = document.getElementById('counter-info');
+        const counterDetails = document.getElementById('counter-details');
+        const backToSettingsBtn = document.getElementById('back-to-settings');
+        const shareCounterBtn = document.getElementById('share-counter');
 
-    // Инициализация при загрузке
-    function init() {
-        initFromURL();
-    }
+        // Уведомление
+        const notification = document.getElementById('notification');
 
-    // Инициализация из URL параметров
-    function initFromURL() {
-        const urlParams = new URLSearchParams(window.location.search);
-
-        // Название
-        const urlName = urlParams.get('name');
-        if (urlName) {
-            document.getElementById('counterName').value = decodeURIComponent(urlName);
-        }
-
-        // Ссылка на картинку
-        const urlImage = urlParams.get('image');
-        if (urlImage) {
-            imageUrl = decodeURIComponent(urlImage);
-            imageUrlInput.value = imageUrl;
-            loadImagePreview(imageUrl);
-        }
-
-        // Дата начала
-        const urlStartDate = urlParams.get('startDate');
-        if (urlStartDate) {
-            document.getElementById('startDate').value = urlStartDate;
-        } else {
-            // Устанавливаем текущую дату и время по умолчанию
-            const now = new Date();
-            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-            document.getElementById('startDate').value = now.toISOString().slice(0, 16);
-        }
-
-        // Начальная сумма
-        const urlAmount = urlParams.get('amount');
-        if (urlAmount) {
-            document.getElementById('initialAmount').value = urlAmount;
-        } else {
-            document.getElementById('initialAmount').value = 1000000;
-        }
-
-        // Процентная ставка
-        const urlRate = urlParams.get('rate');
-        if (urlRate) {
-            document.getElementById('interestRate').value = urlRate;
-        }
-
-        // Автозапуск из URL
-        const urlAutoStart = urlParams.get('autoStart');
-        if (urlAutoStart === 'true') {
-            setTimeout(() => startCounter(), 100);
-        }
-    }
-
-    // Загрузка картинки по URL
-    function loadImageFromUrl() {
-        const url = imageUrlInput.value.trim();
-        if (!url) {
-            showNotification('Введите ссылку на картинку', 'error');
-            return;
-        }
-
-        if (!isValidImageUrl(url)) {
-            showNotification('Введите корректную ссылку на картинку (jpg, png, gif, webp, svg)', 'error');
-            return;
-        }
-
-        loadImagePreview(url);
-        showNotification('Картинка загружена');
-    }
-
-    // Проверка валидности URL картинки
-    function isValidImageUrl(url) {
-        try {
-            const urlObj = new URL(url);
-            const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
-            const pathname = urlObj.pathname.toLowerCase();
-            return imageExtensions.some(ext => pathname.endsWith(ext)) ||
-                urlObj.hostname.includes('imgur') ||
-                urlObj.hostname.includes('cloudinary') ||
-                pathname.includes('image') ||
-                pathname.includes('picture');
-        } catch {
-            return false;
-        }
-    }
-
-    // Загрузка превью картинки
-    function loadImagePreview(url) {
-        imageUrl = url;
-        imagePreview.src = url;
-        imagePreview.style.display = 'block';
-        counterImage.src = url;
-        counterImage.style.display = 'block';
-        removeImageBtn.style.display = 'block';
-    }
-
-    // Обработчик ошибки загрузки картинки
-    function handleImageError() {
-        showNotification('Ошибка загрузки картинки', 'error');
-        counterImage.style.display = 'none';
-    }
-
-    // Обработчик кнопки удаления картинки
-    removeImageBtn.addEventListener('click', function() {
-        imageUrl = null;
-        imagePreview.style.display = 'none';
-        counterImage.style.display = 'none';
-        removeImageBtn.style.display = 'none';
-        imageUrlInput.value = '';
-        showNotification('Картинка удалена');
-    });
-
-    function startCounter() {
-        // Получаем значения из полей ввода
-        const startDateValue = document.getElementById('startDate').value;
-        counterName = document.getElementById('counterName').value;
-        initialAmount = parseFloat(document.getElementById('initialAmount').value);
-        annualRate = parseFloat(document.getElementById('interestRate').value.replace(',', '.'));
-
-        if (isNaN(initialAmount) || isNaN(annualRate) || !startDateValue || !counterName) {
-            showNotification('Пожалуйста, заполните все поля корректно', 'error');
-            return;
-        }
-
-        startTime = new Date(startDateValue);
-
-        // Устанавливаем название и картинку
-        counterTitle.textContent = counterName;
-        if (imageUrl) {
-            counterImage.style.display = 'block';
-        } else {
-            counterImage.style.display = 'none';
-        }
-
-        // Переключаемся в режим счётчика
-        configMode.style.display = 'none';
-        counterMode.style.display = 'block';
-
-        // Обновляем отображение
-        updateDisplay(initialAmount);
-
-        // Запускаем обновление каждую секунду
-        if (counterInterval) {
-            clearInterval(counterInterval);
-        }
-        counterInterval = setInterval(updateCounter, 1000);
-    }
-
-    function startAndShare() {
-        startCounter();
-        if (counterMode.style.display === 'block') {
-            const shareUrl = generateShareLink();
-            copyToClipboard(shareUrl);
-            showNotification('Счётчик запущен и ссылка скопирована!');
-        }
-    }
-
-    function stopCounter() {
-        if (counterInterval) {
-            clearInterval(counterInterval);
-            counterInterval = null;
-        }
-
-        // Возвращаемся в режим настройки
-        configMode.style.display = 'block';
-        counterMode.style.display = 'none';
-    }
-
-    function updateCounter() {
+        // Установка текущей даты и времени по умолчанию
         const now = new Date();
-        const elapsedSeconds = (now - startTime) / 1000;
+        startDateInput.value = now.toISOString().slice(0, 16);
 
-        if (elapsedSeconds < 0) {
-            // Если дата начала в будущем
-            document.getElementById('info').textContent = 'Ожидание начала...';
-            updateDisplay(initialAmount);
-            return;
-        }
+        // Переменные для работы счётчика
+        let updateInterval;
 
-        // Рассчитываем сумму с учётом сложных процентов
-        const elapsedYears = elapsedSeconds / (365 * 24 * 60 * 60);
-        const currentAmount = initialAmount * Math.pow(1 + annualRate/100, elapsedYears);
+        // Загрузка изображения для предпросмотра
+        loadImageBtn.addEventListener('click', function() {
+            const imageUrl = imageUrlInput.value.trim();
 
-        updateDisplay(currentAmount);
+            if (!imageUrl) {
+                showNotification('Введите URL изображения', 'error');
+                return;
+            }
 
-        // Обновляем информацию о времени
-        const elapsedDays = Math.floor(elapsedSeconds / (24 * 60 * 60));
-        const elapsedHours = Math.floor((elapsedSeconds % (24 * 60 * 60)) / (60 * 60));
-        const elapsedMinutes = Math.floor((elapsedSeconds % (60 * 60)) / 60);
-        const elapsedSecs = Math.floor(elapsedSeconds % 60);
+            if (!isValidImageUrl(imageUrl)) {
+                showNotification('Некорректный URL изображения', 'error');
+                return;
+            }
 
-        const startDate = new Date(startTime);
-        const formattedDate = startDate.toLocaleDateString('ru-RU');
+            const img = imagePreview.querySelector('img');
+            img.src = imageUrl;
 
-        document.getElementById('info').innerHTML =
-            `Прошло: ${elapsedDays}д ${elapsedHours}ч ${elapsedMinutes}м ${elapsedSecs}с<br>` +
-            `(${formatNumber(initialAmount)} с ${formattedDate} под ${annualRate}%)`;
-    }
+            img.onload = function() {
+                imagePreview.style.display = 'block';
+                showNotification('Изображение загружено', 'success');
+            };
 
-    function updateDisplay(amount) {
-        const percentageElement = document.getElementById('percentageDisplay');
-
-        // Форматируем число без разделителей тысяч
-        const formattedAmount = formatNumber(amount);
-
-        // Плавное изменение числа
-        percentageElement.textContent = formattedAmount;
-    }
-
-    // Форматирование чисел без разделителей тысяч
-    function formatNumber(number) {
-        return number.toFixed(2);
-    }
-
-    function generateShareLink() {
-        const baseUrl = window.location.origin + window.location.pathname;
-        const params = new URLSearchParams({
-            name: counterName,
-            startDate: document.getElementById('startDate').value,
-            amount: initialAmount,
-            rate: annualRate,
-            autoStart: 'true'
+            img.onerror = function() {
+                imagePreview.style.display = 'none';
+                showNotification('Ошибка загрузки изображения', 'error');
+            };
         });
 
-        // Добавляем ссылку на картинку если есть
-        if (imageUrl) {
-            params.set('image', encodeURIComponent(imageUrl));
+        // Удаление изображения
+        removeImageBtn.addEventListener('click', function() {
+            imagePreview.style.display = 'none';
+            imageUrlInput.value = '';
+            showNotification('Изображение удалено', 'success');
+        });
+
+        // Запуск счётчика
+        startCounterBtn.addEventListener('click', function() {
+            // Валидация данных
+            if (!validateForm()) {
+                return;
+            }
+
+            // Сохранение данных
+            const counterData = {
+                name: counterNameInput.value,
+                imageUrl: imageUrlInput.value,
+                startDate: startDateInput.value,
+                initialAmount: parseFloat(initialAmountInput.value),
+                annualRate: parseFloat(annualRateInput.value.replace(',', '.'))
+            };
+
+            // Переключение на страницу счётчика
+            switchToCounterPage(counterData);
+
+            // Копирование ссылки в буфер
+            copyShareUrl(counterData);
+        });
+
+        // Возврат к настройкам
+        backToSettingsBtn.addEventListener('click', function() {
+            clearInterval(updateInterval);
+            settingsPage.classList.add('active');
+            counterPage.classList.remove('active');
+        });
+
+        // Поделиться счётчиком
+        shareCounterBtn.addEventListener('click', function() {
+            const counterData = getCounterDataFromUrl() || {
+                name: counterTitle.textContent,
+                imageUrl: counterImage.querySelector('img').src,
+                startDate: document.getElementById('start-date').value,
+                initialAmount: parseFloat(document.getElementById('initial-amount').value),
+                annualRate: parseFloat(document.getElementById('annual-rate').value.replace(',', '.'))
+            };
+
+            copyShareUrl(counterData);
+        });
+
+        // Валидация формы
+        function validateForm() {
+            if (!counterNameInput.value.trim()) {
+                showNotification('Введите название счётчика', 'error');
+                return false;
+            }
+
+            if (!startDateInput.value) {
+                showNotification('Укажите дату начала', 'error');
+                return false;
+            }
+
+            const startDate = new Date(startDateInput.value);
+            if (startDate > new Date()) {
+                showNotification('Дата начала не может быть в будущем', 'error');
+                return false;
+            }
+
+            if (!initialAmountInput.value || parseFloat(initialAmountInput.value) <= 0) {
+                showNotification('Введите корректную начальную сумму', 'error');
+                return false;
+            }
+
+            const rate = annualRateInput.value.replace(',', '.');
+            if (!rate || isNaN(parseFloat(rate)) || parseFloat(rate) <= 0) {
+                showNotification('Введите корректную годовую ставку', 'error');
+                return false;
+            }
+
+            return true;
         }
 
-        const shareUrl = `${baseUrl}?${params.toString()}`;
-        return shareUrl;
-    }
+        // Переключение на страницу счётчика
+        function switchToCounterPage(counterData) {
+            // Обновление данных на странице счётчика
+            counterTitle.textContent = counterData.name;
 
-    function shareCounter() {
-        const shareUrl = generateShareLink();
-        copyToClipboard(shareUrl);
-        showNotification('Ссылка скопирована в буфер обмена!');
-    }
+            if (counterData.imageUrl) {
+                const img = counterImage.querySelector('img');
+                img.src = counterData.imageUrl;
+                counterImage.style.display = 'block';
 
-    function copyToClipboard(text) {
-        navigator.clipboard.writeText(text)
-            .then(() => {})
-            .catch(() => {
-                // Fallback для старых браузеров
-                const textArea = document.createElement('textarea');
-                textArea.value = text;
-                document.body.appendChild(textArea);
-                textArea.select();
-                document.execCommand('copy');
-                document.body.removeChild(textArea);
-            });
-    }
+                img.onerror = function() {
+                    counterImage.style.display = 'none';
+                };
+            } else {
+                counterImage.style.display = 'none';
+            }
 
-    function showNotification(message, type = 'success') {
-        notification.textContent = message;
-        notification.className = 'notification';
+            // Переключение страниц
+            settingsPage.classList.remove('active');
+            counterPage.classList.add('active');
 
-        if (type === 'error') {
-            notification.style.background = '#ff6b6b';
-        } else {
-            notification.style.background = '#20c997';
+            // Запуск обновления счётчика
+            updateCounter(counterData);
+            updateInterval = setInterval(() => updateCounter(counterData), 1000);
         }
 
-        notification.classList.add('show');
+        // Обновление счётчика
+        function updateCounter(counterData) {
+            const startDate = new Date(counterData.startDate);
+            const now = new Date();
+            const elapsedSeconds = Math.max(0, (now - startDate) / 1000);
 
-        setTimeout(() => {
-            notification.classList.remove('show');
-        }, 3000);
-    }
+            // Расчет текущей суммы по формуле сложных процентов
+            const elapsedYears = elapsedSeconds / (365 * 24 * 60 * 60);
+            const currentAmount = counterData.initialAmount *
+                Math.pow(1 + counterData.annualRate / 100, elapsedYears);
 
-    // Инициализация при загрузке
-    window.onload = init;
+            // Форматирование времени
+            const days = Math.floor(elapsedSeconds / (24 * 60 * 60));
+            const hours = Math.floor((elapsedSeconds % (24 * 60 * 60)) / (60 * 60));
+            const minutes = Math.floor((elapsedSeconds % (60 * 60)) / 60);
+            const seconds = Math.floor(elapsedSeconds % 60);
+
+            // Обновление отображения
+            animateNumber(counterValue, Math.floor(currentAmount));
+            counterInfo.textContent = `Прошло: ${days}д ${hours}ч ${minutes}м ${seconds}с`;
+
+            const formattedDate = startDate.toLocaleDateString('ru-RU');
+            counterDetails.textContent =
+                `(начальная сумма ${formatNumber(counterData.initialAmount)} с ${formattedDate} под ${counterData.annualRate}%)`;
+        }
+
+        // Анимация числа
+        function animateNumber(element, targetValue) {
+            const currentValue = parseFloat(element.textContent.replace(/\s/g, '')) || 0;
+
+            if (currentValue === targetValue) return;
+
+            // Простая анимация - сразу устанавливаем новое значение
+            // В реальном приложении можно добавить плавную анимацию
+            element.textContent = formatNumber(targetValue);
+        }
+
+        // Форматирование числа (без разделителей тысяч)
+        function formatNumber(num) {
+            return num.toString();
+        }
+
+        // Проверка валидности URL изображения
+        function isValidImageUrl(url) {
+            const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg)$/i;
+            const imageHosts = [
+                'imgur.com', 'picsum.photos', 'unsplash.com', 'pexels.com',
+                'flickr.com', 'imageshack.com', 'postimg.cc', 'imgbox.com'
+            ];
+
+            return imageExtensions.test(url) ||
+                imageHosts.some(host => url.includes(host));
+        }
+
+        // Показать уведомление
+        function showNotification(message, type) {
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Копирование ссылки для общего доступа
+        function copyShareUrl(counterData) {
+            const params = new URLSearchParams();
+            params.set('name', counterData.name);
+            if (counterData.imageUrl) params.set('image', encodeURIComponent(counterData.imageUrl));
+            params.set('startDate', counterData.startDate);
+            params.set('amount', counterData.initialAmount);
+            params.set('rate', counterData.annualRate);
+            params.set('autoStart', 'true');
+
+            const shareUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
+
+            navigator.clipboard.writeText(shareUrl)
+                .then(() => {
+                    showNotification('Ссылка скопирована в буфер', 'success');
+                })
+                .catch(() => {
+                    showNotification('Не удалось скопировать ссылку', 'error');
+                });
+        }
+
+        // Получение данных счётчика из URL
+        function getCounterDataFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+
+            if (!urlParams.has('autoStart')) return null;
+
+            try {
+                return {
+                    name: urlParams.get('name') || 'Мой счётчик',
+                    imageUrl: urlParams.has('image') ? decodeURIComponent(urlParams.get('image')) : '',
+                    startDate: urlParams.get('startDate'),
+                    initialAmount: parseFloat(urlParams.get('amount')),
+                    annualRate: parseFloat(urlParams.get('rate'))
+                };
+            } catch (e) {
+                console.error('Ошибка при разборе параметров URL:', e);
+                return null;
+            }
+        }
+
+        // Автозапуск счётчика при наличии параметров в URL
+        const urlCounterData = getCounterDataFromUrl();
+        if (urlCounterData) {
+            // Заполняем форму данными из URL
+            counterNameInput.value = urlCounterData.name;
+            imageUrlInput.value = urlCounterData.imageUrl;
+            startDateInput.value = urlCounterData.startDate;
+            initialAmountInput.value = urlCounterData.initialAmount;
+            annualRateInput.value = urlCounterData.annualRate;
+
+            // Загружаем изображение, если есть
+            if (urlCounterData.imageUrl) {
+                const img = imagePreview.querySelector('img');
+                img.src = urlCounterData.imageUrl;
+                img.onload = function() {
+                    imagePreview.style.display = 'block';
+                };
+            }
+
+            // Запускаем счётчик
+            switchToCounterPage(urlCounterData);
+        }
+    });
 </script>
 </body>
 </html>
