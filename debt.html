@@ -34,7 +34,7 @@
             text-align: center;
             color: #333;
             margin-bottom: 25px;
-            font-size: 1.8em;
+            font-size: clamp(1.5em, 4vw, 1.8em);
         }
 
         .input-group {
@@ -105,18 +105,19 @@
         }
 
         .percentage {
-            font-size: clamp(2.5em, 8vw, 4em);
+            font-size: clamp(2.5em, 10vw, 4.5em);
             font-weight: bold;
             color: #667eea;
             margin: 15px 0;
             font-family: 'Courier New', monospace;
             word-break: break-all;
             overflow-wrap: break-word;
+            line-height: 1.1;
         }
 
         .info {
             color: #888;
-            font-size: 0.9em;
+            font-size: clamp(0.8em, 3vw, 0.9em);
             margin-top: 10px;
             line-height: 1.5;
         }
@@ -130,8 +131,9 @@
         }
 
         .image-preview {
-            max-width: 150px;
-            max-height: 150px;
+            width: 100%;
+            max-width: 300px;
+            max-height: 200px;
             width: auto;
             height: auto;
             object-fit: contain;
@@ -142,12 +144,13 @@
         }
 
         .counter-image {
-            max-width: 80px;
-            max-height: 80px;
+            width: 100%;
+            max-width: 120px;
+            max-height: 120px;
             width: auto;
             height: auto;
             object-fit: contain;
-            border-radius: 8px;
+            border-radius: 10px;
             margin-bottom: 15px;
             border: 2px solid #ddd;
             display: block;
@@ -162,7 +165,7 @@
 
         .counter-title {
             margin: 0;
-            font-size: 1.6em;
+            font-size: clamp(1.4em, 5vw, 1.8em);
         }
 
         .notification {
@@ -177,6 +180,7 @@
             transform: translateX(400px);
             transition: transform 0.3s ease;
             z-index: 1000;
+            max-width: 300px;
         }
 
         .notification.show {
@@ -224,32 +228,56 @@
             text-align: center;
         }
 
+        .paste-hint {
+            font-size: 0.8em;
+            color: #666;
+            margin-top: 5px;
+            text-align: center;
+        }
+
         @media (max-width: 480px) {
             .container {
                 padding: 20px;
                 margin: 10px;
             }
 
-            h1 {
-                font-size: 1.5em;
-                margin-bottom: 20px;
-            }
-
             .percentage {
-                font-size: 2.2em;
-            }
-
-            .counter-title {
-                font-size: 1.4em;
+                font-size: 2.8em;
             }
 
             .counter-image {
-                max-width: 60px;
-                max-height: 60px;
+                max-width: 100px;
+                max-height: 100px;
             }
 
             .button-group {
                 flex-direction: column;
+            }
+
+            .notification {
+                right: 10px;
+                left: 10px;
+                max-width: none;
+            }
+        }
+
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 600px;
+            }
+
+            .percentage {
+                font-size: clamp(3em, 8vw, 5em);
+            }
+
+            .counter-image {
+                max-width: 150px;
+                max-height: 150px;
+            }
+
+            .image-preview {
+                max-width: 400px;
+                max-height: 250px;
             }
         }
     </style>
@@ -276,6 +304,7 @@
                 <div class="file-input-button">Выбрать картинку</div>
                 <input type="file" id="imageUpload" accept="image/*">
             </div>
+            <div class="paste-hint">Или вставьте картинку из буфера обмена (Ctrl+V)</div>
             <div class="image-controls">
                 <img id="imagePreview" class="image-preview" style="display: none;">
                 <button id="removeImageBtn" class="remove-btn" style="display: none;">Убрать картинку</button>
@@ -294,7 +323,7 @@
 
         <div class="input-group">
             <label for="interestRate">Ставка (%):</label>
-            <input type="number" id="interestRate" value="10" step="0.1">
+            <input type="text" id="interestRate" value="10">
         </div>
 
         <button onclick="startAndShare()" class="share-btn">Запустить счётчик</button>
@@ -386,60 +415,90 @@
         if (urlAutoStart === 'true') {
             setTimeout(() => startCounter(), 100);
         }
+
+        // Добавляем обработчик вставки из буфера
+        setupPasteHandler();
+    }
+
+    // Обработчик вставки из буфера обмена
+    function setupPasteHandler() {
+        document.addEventListener('paste', function(e) {
+            // Проверяем, находимся ли мы в режиме настроек
+            if (configMode.style.display !== 'block') return;
+
+            const items = e.clipboardData?.items;
+            if (!items) return;
+
+            for (let item of items) {
+                if (item.type.indexOf('image') !== -1) {
+                    const file = item.getAsFile();
+                    if (file) {
+                        processImageFile(file);
+                        e.preventDefault();
+                        break;
+                    }
+                }
+            }
+        });
     }
 
     // Обработчик загрузки картинки
     imageUpload.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
-            // Проверяем размер файла (максимум 2MB)
-            if (file.size > 2 * 1024 * 1024) {
-                showNotification('Файл слишком большой. Максимальный размер: 2MB', 'error');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                // Создаем изображение для масштабирования
-                const img = new Image();
-                img.onload = function() {
-                    // Создаем canvas для сжатия изображения
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-
-                    // Максимальные размеры
-                    const maxWidth = 800;
-                    const maxHeight = 800;
-
-                    let width = img.width;
-                    let height = img.height;
-
-                    // Масштабируем если нужно
-                    if (width > maxWidth || height > maxHeight) {
-                        const ratio = Math.min(maxWidth / width, maxHeight / height);
-                        width = Math.floor(width * ratio);
-                        height = Math.floor(height * ratio);
-                    }
-
-                    canvas.width = width;
-                    canvas.height = height;
-                    ctx.drawImage(img, 0, 0, width, height);
-
-                    // Получаем сжатое изображение
-                    imageData = canvas.toDataURL('image/jpeg', 0.8);
-                    imagePreview.src = imageData;
-                    imagePreview.style.display = 'block';
-                    counterImage.src = imageData;
-                    counterImage.style.display = 'block';
-                    removeImageBtn.style.display = 'block';
-
-                    showNotification('Картинка загружена и оптимизирована');
-                };
-                img.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
+            processImageFile(file);
         }
     });
+
+    // Функция обработки файла картинки
+    function processImageFile(file) {
+        // Проверяем размер файла (максимум 2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            showNotification('Файл слишком большой. Максимальный размер: 2MB', 'error');
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            // Создаем изображение для масштабирования
+            const img = new Image();
+            img.onload = function() {
+                // Создаем canvas для сжатия изображения
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                // Максимальные размеры
+                const maxWidth = 1200;
+                const maxHeight = 1200;
+
+                let width = img.width;
+                let height = img.height;
+
+                // Масштабируем если нужно
+                if (width > maxWidth || height > maxHeight) {
+                    const ratio = Math.min(maxWidth / width, maxHeight / height);
+                    width = Math.floor(width * ratio);
+                    height = Math.floor(height * ratio);
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // Получаем сжатое изображение
+                imageData = canvas.toDataURL('image/jpeg', 0.8);
+                imagePreview.src = imageData;
+                imagePreview.style.display = 'block';
+                counterImage.src = imageData;
+                counterImage.style.display = 'block';
+                removeImageBtn.style.display = 'block';
+
+                showNotification('Картинка загружена и оптимизирована');
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
 
     // Обработчик кнопки удаления картинки
     removeImageBtn.addEventListener('click', function() {
@@ -456,7 +515,7 @@
         const startDateValue = document.getElementById('startDate').value;
         counterName = document.getElementById('counterName').value;
         initialAmount = parseFloat(document.getElementById('initialAmount').value);
-        annualRate = parseFloat(document.getElementById('interestRate').value);
+        annualRate = parseFloat(document.getElementById('interestRate').value.replace(',', '.'));
 
         if (isNaN(initialAmount) || isNaN(annualRate) || !startDateValue || !counterName) {
             showNotification('Пожалуйста, заполните все поля корректно', 'error');
