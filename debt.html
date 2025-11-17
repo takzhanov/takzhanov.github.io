@@ -4,567 +4,360 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>Процентный счётчик</title>
+
     <style>
         :root {
-            --bg-gradient-start: #667eea;
-            --bg-gradient-end: #764ba2;
+            --bg1: #667eea;
+            --bg2: #764ba2;
             --primary: #667eea;
             --primary-dark: #4a5bd4;
             --secondary: #eef2ff;
-            --danger: #e53e3e;
-            --success: #38a169;
             --text-main: #1f2933;
             --text-muted: #6b7280;
-            --card-bg: #ffffff;
-            --border-radius-lg: 24px;
-            --shadow-lg: 0 18px 40px rgba(15, 23, 42, 0.25);
+            --success: #38a169;
+            --danger: #e53e3e;
+            --radius: 20px;
         }
 
-        * {
-            box-sizing: border-box;
-        }
+        * { box-sizing: border-box; }
 
         body {
             margin: 0;
             min-height: 100vh;
-            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+            background: linear-gradient(135deg, var(--bg1), var(--bg2));
+            font-family: system-ui, sans-serif;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 16px;
-            color: var(--text-main);
         }
 
-        .app {
+        .container {
             width: 100%;
-            max-width: 960px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius-lg);
-            box-shadow: var(--shadow-lg);
-            padding: clamp(1.5rem, 3vw, 2.5rem);
             max-width: 640px;
-            margin: 0 auto;
+            background: #fff;
+            border-radius: var(--radius);
+            padding: 24px;
+            box-shadow: 0 12px 32px rgba(0,0,0,0.25);
         }
 
-        .card-header {
+        .hidden { display: none !important; }
+
+        /* ----------- SETTINGS ----------- */
+
+        h1 {
+            margin: 0 0 8px;
             text-align: center;
-            margin-bottom: 1.25rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .card-header h1 {
-            margin: 0;
-            font-size: clamp(1.4rem, 3vw, 1.8rem);
             font-weight: 700;
             color: var(--text-main);
         }
 
-        .card-header p {
-            margin: 0.4rem 0 0;
+        .subtitle {
+            text-align: center;
             font-size: 0.9rem;
             color: var(--text-muted);
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .divider {
-            width: 100%;
-            height: 1px;
-            margin: 0.9rem 0;
-            background: linear-gradient(
-                    to right,
-                    rgba(148, 163, 184, 0.05),
-                    rgba(148, 163, 184, 0.8),
-                    rgba(148, 163, 184, 0.05)
-            );
-        }
-
-        /* Формы / настройки */
-
-        .form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .form-section {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
+            margin-bottom: 20px;
         }
 
         .field {
             display: flex;
             flex-direction: column;
-            gap: 0.35rem;
+            gap: 6px;
+            margin-bottom: 16px;
         }
 
         .field label {
             font-size: 0.9rem;
-            font-weight: 500;
             color: var(--text-muted);
-            display: flex;
-            align-items: center;
-            gap: 0.35rem;
         }
 
-        .field label .label-icon {
-            font-size: 1rem;
-        }
-
-        .field input {
+        input {
+            padding: 10px 12px;
             border-radius: 10px;
-            border: 1px solid #e5e7eb;
-            padding: 0.55rem 0.75rem;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.15s ease, box-shadow 0.15s ease;
-        }
-
-        .field input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 1px rgba(102, 126, 234, 0.45);
-        }
-
-        .field input[type="number"]::-webkit-outer-spin-button,
-        .field input[type="number"]::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-
-        .field input[type="number"] {
-            -moz-appearance: textfield;
+            border: 1px solid #d5d7df;
+            font-size: 1rem;
         }
 
         .row {
             display: flex;
-            gap: 0.75rem;
-            flex-wrap: wrap;
+            gap: 12px;
         }
+        .col { flex: 1; }
 
-        .row > .col {
-            flex: 1 1 0;
-            min-width: 0;
-        }
-
-        .image-row {
+        .image-btns {
             display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            align-items: flex-end;
+            gap: 8px;
+            margin-top: 4px;
         }
-
-        .image-row .field {
-            flex: 1 1 200px;
-        }
-
-        .image-buttons {
-            display: flex;
-            flex-direction: row;
-            gap: 0.4rem;
-            flex-wrap: wrap;
-        }
-
-        .image-buttons .btn {
-            white-space: nowrap;
-        }
-
-        .image-preview-wrapper {
-            margin-top: 0.5rem;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .image-preview-wrapper.visible {
-            display: flex;
-        }
-
-        .image-preview-wrapper img {
-            max-width: 100%;
-            max-height: 300px;
-            object-fit: contain;
-            display: block;
-        }
-
-        .actions {
-            margin-top: 0.75rem;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        /* Кнопки */
 
         .btn {
-            border-radius: 999px;
+            padding: 10px 18px;
+            border-radius: 50px;
             border: none;
-            padding: 0.55rem 1.3rem;
-            font-size: 0.95rem;
-            font-weight: 500;
             cursor: pointer;
+            font-size: 0.95rem;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.35rem;
-            transition: background-color 0.15s ease, transform 0.08s ease, box-shadow 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-            user-select: none;
-        }
-
-        .btn:active {
-            transform: translateY(1px);
+            gap: 6px;
+            transition: 0.15s;
+            white-space: nowrap;
         }
 
         .btn-primary {
             background: var(--primary);
-            color: #ffffff;
-            box-shadow: 0 8px 18px rgba(102, 126, 234, 0.35);
+            color: white;
         }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
+        .btn-primary:hover { background: var(--primary-dark); }
 
         .btn-secondary {
             background: var(--secondary);
-            color: var(--primary);
+            color: var(--primary-dark);
         }
 
         .btn-outline {
             background: transparent;
             border: 1px solid #cbd5f5;
-            color: var(--primary);
+            color: var(--primary-dark);
         }
 
-        .btn-secondary:hover,
-        .btn-outline:hover {
-            background: rgba(102, 126, 234, 0.06);
+        /* image preview */
+        .preview-wrap {
+            display: none;
+            justify-content: center;
+            margin: 12px 0;
         }
 
-        .btn-icon {
-            font-size: 1.1rem;
-            line-height: 1;
-        }
-
-        .btn:focus-visible {
-            outline: 2px solid var(--primary);
-            outline-offset: 2px;
-        }
-
-        /* Режим счётчика */
-
-        .counter {
+        .preview-wrap.visible {
             display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            align-items: center;
+        }
+
+        .preview-wrap img {
+            max-width: 100%;
+            max-height: 260px;
+            border-radius: var(--radius);
+            object-fit: contain;
+        }
+
+        /* ---------- COUNTER ----------- */
+
+        .counter-title {
+            margin: 16px 0 12px;
+            font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .counter-img {
+            display: none;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+        .counter-img.visible { display: flex; }
+
+        .counter-img img {
+            max-width: 100%;
+            max-height: 300px;
+            object-fit: contain;
+            border-radius: var(--radius);
+        }
+
+        .amount-block {
+            margin-top: 8px;
+            padding: 16px 12px 20px;
+            background: linear-gradient(145deg, #f9fafb, #eef2ff);
+            border: 1px solid rgba(120,130,150,0.35);
+            border-radius: var(--radius);
             text-align: center;
         }
 
-        .counter-title {
-            margin: 0;
-            font-size: clamp(1.4rem, 3.1vw, 2rem);
-            font-weight: 700;
-            color: var(--text-main);
-        }
-
-        .counter-image-wrapper {
-            margin-top: 0.7rem;
-            display: none;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .counter-image-wrapper.visible {
-            display: flex;
-        }
-
-        .counter-image-wrapper img {
-            max-width: 100%;
-            max-height: 320px;
-            object-fit: contain;
-            display: block;
-        }
-
-        .counter-block {
-            margin-top: 1rem;
-            width: 100%;
-            padding: 0.9rem 1rem 1rem;
-            border-radius: 18px;
-            background: linear-gradient(145deg, #f9fafb, #eef2ff);
-            border: 1px solid rgba(148, 163, 184, 0.4);
-        }
-
-        .counter-main-value {
+        .main-amount {
             font-family: "Courier New", monospace;
+            font-size: clamp(2.4rem, 6vw, 4rem);
             font-weight: 700;
-            font-size: clamp(2.5rem, 6vw, 4.5rem);
-            letter-spacing: 0.03em;
-            color: var(--text-main);
-            word-break: break-all;
-            margin-bottom: 0.5rem;
+            user-select: none;
+            position: relative;
         }
 
-        .counter-info-line {
+        /* tooltip */
+        .tooltip {
+            position: absolute;
+            top: -58px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.85);
+            padding: 6px 10px;
+            border-radius: 6px;
+            color: #fff;
+            white-space: nowrap;
+            font-size: 0.8rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s;
+        }
+
+        .main-amount:hover .tooltip {
+            opacity: 1;
+        }
+
+        .info-line {
             font-size: 0.95rem;
             color: var(--text-muted);
-            margin-top: 0.15rem;
+            margin-top: 6px;
         }
 
-        .counter-info-line.secondary {
-            font-size: 0.9rem;
-        }
-
-        .counter-actions {
-            margin-top: 1.1rem;
+        .btns-row {
+            margin-top: 18px;
             display: flex;
-            gap: 0.6rem;
-            flex-wrap: wrap;
+            gap: 10px;
             justify-content: center;
+            flex-wrap: wrap;
         }
 
-        /* Toast-уведомления */
+        .btns-row .btn {
+            min-width: 120px;
+        }
 
+        /* ---------- Toast --------- */
         .toast-container {
             position: fixed;
             top: 16px;
             right: 16px;
             display: flex;
             flex-direction: column;
-            gap: 0.5rem;
-            z-index: 9999;
+            gap: 6px;
+            z-index: 999;
         }
 
         .toast {
-            min-width: 220px;
-            max-width: 320px;
-            padding: 0.7rem 1rem;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            color: #ffffff;
-            box-shadow: 0 12px 24px rgba(15, 23, 42, 0.35);
+            padding: 10px 16px;
+            border-radius: 10px;
+            color: #fff;
             opacity: 0;
-            transform: translateX(110%);
-            transition: opacity 0.18s ease, transform 0.18s ease;
+            transform: translateX(120%);
+            transition: 0.2s;
+            max-width: 260px;
             display: flex;
             align-items: center;
-            gap: 0.45rem;
+            gap: 8px;
+            font-size: 0.9rem;
         }
 
-        .toast--success {
-            background: var(--success);
-        }
-
-        .toast--error {
-            background: var(--danger);
-        }
-
-        .toast--visible {
+        .toast-success { background: var(--success); }
+        .toast-error { background: var(--danger); }
+        .toast-visible {
             opacity: 1;
             transform: translateX(0);
         }
 
-        .toast-icon {
-            font-size: 1rem;
-        }
-
-        /* Адаптивность */
-
-        @media (max-width: 768px) {
-            .card {
-                padding: 1.4rem;
-                border-radius: 20px;
-            }
-
-            .image-buttons {
-                width: 100%;
-                justify-content: flex-start;
-            }
-
-            .actions {
-                justify-content: stretch;
-            }
-
-            .actions .btn {
-                width: 100%;
-                justify-content: center;
-            }
-
-            .counter-actions {
-                flex-direction: column;
-            }
-
-            .counter-actions .btn {
-                width: 100%;
-            }
-
-            .image-preview-wrapper img,
-            .counter-image-wrapper img {
-                max-height: 260px;
-            }
-        }
-
         @media (max-width: 480px) {
-            .card {
-                padding: 1.2rem;
-                border-radius: 18px;
-            }
-
-            .card-header p {
-                font-size: 0.85rem;
-            }
-
-            .counter-main-value {
-                font-size: clamp(2.3rem, 8vw, 3.2rem);
-            }
-
-            .image-preview-wrapper img,
-            .counter-image-wrapper img {
-                max-height: 240px;
-            }
+            .container { padding: 18px; }
+            .btn { width: 100%; justify-content: center; }
+            .btns-row { flex-direction: column; }
         }
     </style>
 </head>
+
 <body>
-<div class="app">
-    <div class="card">
-        <!-- Режим настройки -->
-        <section id="settingsView">
-            <header class="card-header">
-                <h1>Процентный счётчик</h1>
-                <p>Настрой параметры, сгенерируй ссылку и наблюдай рост суммы по сложным процентам.</p>
-            </header>
 
-            <form id="settingsForm" class="form" novalidate>
-                <div class="form-section">
-                    <div class="field">
-                        <label for="nameInput">
-                            <span class="label-icon">🏷️</span>
-                            <span>Название счётчика</span>
-                        </label>
-                        <input id="nameInput" type="text" placeholder="Например: Мой капитал 2030">
-                    </div>
+<!-------------------- APP -------------------->
+<div class="container">
 
-                    <div class="image-row">
-                        <div class="field">
-                            <label for="imageInput">
-                                <span class="label-icon">🖼️</span>
-                                <span>Ссылка на картинку (необязательно)</span>
-                            </label>
-                            <input id="imageInput" type="url" placeholder="https://example.com/image.webp">
-                        </div>
-                        <div class="image-buttons">
-                            <button type="button" id="loadImageBtn" class="btn btn-secondary">
-                                <span class="btn-icon">👁️</span><span>Предпросмотр</span>
-                            </button>
-                            <button type="button" id="clearImageBtn" class="btn btn-outline">
-                                🧹 Убрать
-                            </button>
-                        </div>
-                    </div>
+    <!-- SETTINGS -->
+    <section id="settingsView">
+        <h1>Процентный счётчик</h1>
+        <p class="subtitle">Укажи параметры или просто запусти по умолчанию</p>
 
-                    <div id="imagePreviewWrapper" class="image-preview-wrapper">
-                        <img id="imagePreview" alt="Предпросмотр картинки">
-                    </div>
-                </div>
+        <div class="field">
+            <label>Название</label>
+            <input id="nameInput" type="text" placeholder="Например: Инвестиции 2030"
+                   value="Мой капитал">
+        </div>
 
-                <div class="divider"></div>
+        <div class="field">
+            <label>Ссылка на картинку (необязательно)</label>
+            <input id="imageInput" type="url" placeholder="https://example.com/img.png">
+            <div class="image-btns">
+                <button type="button" id="previewBtn" class="btn btn-secondary">👁‍🗨 Просмотр</button>
+                <button type="button" id="clearImgBtn" class="btn btn-outline">🧹 Удалить</button>
+            </div>
+        </div>
 
-                <div class="form-section">
-                    <div class="row">
-                        <div class="col field">
-                            <label for="startDateInput">
-                                <span class="label-icon">⏰</span>
-                                <span>Дата и время начала</span>
-                            </label>
-                            <input id="startDateInput" type="datetime-local">
-                        </div>
-                        <div class="col field">
-                            <label for="amountInput">
-                                <span class="label-icon">💵</span>
-                                <span>Начальная сумма</span>
-                            </label>
-                            <input id="amountInput" type="number" inputmode="decimal" placeholder="1000000" value="1000000">
-                        </div>
-                    </div>
+        <div id="previewWrap" class="preview-wrap">
+            <img id="previewImg">
+        </div>
 
-                    <div class="field">
-                        <label for="rateInput">
-                            <span class="label-icon">📈</span>
-                            <span>Годовая ставка, % (запятая или точка)</span>
-                        </label>
-                        <input id="rateInput" type="text" placeholder="Например: 10 или 12,5" value="10">
-                    </div>
-                </div>
-
-                <div class="divider"></div>
-
-                <div class="actions">
-                    <button type="button" id="startCounterBtn" class="btn btn-primary">
-                        <span class="btn-icon">🚀</span><span>Запустить счётчик</span>
-                    </button>
-                </div>
-            </form>
-        </section>
-
-        <!-- Режим счётчика -->
-        <section id="counterView" class="counter hidden">
-            <h2 id="counterTitle" class="counter-title"></h2>
-
-            <div class="divider"></div>
-
-            <div id="counterImageWrapper" class="counter-image-wrapper">
-                <img id="counterImage" alt="">
+        <div class="row">
+            <div class="col field">
+                <label>Дата начала</label>
+                <input id="startDateInput" type="datetime-local">
             </div>
 
-            <div class="counter-block">
-                <div class="counter-main-value" id="mainAmount">0</div>
-                <div class="counter-info-line" id="elapsedInfo">⏱ Прошло: 0д 0ч 0м 0с</div>
-                <div class="counter-info-line secondary" id="detailsInfo">ℹ️</div>
+            <div class="col field">
+                <label>Начальная сумма</label>
+                <input id="amountInput" type="number" value="1000000">
             </div>
+        </div>
 
-            <div class="counter-actions">
-                <button type="button" id="backToSettingsBtn" class="btn btn-secondary">
-                    ⚙️ Настройки
-                </button>
-                <button type="button" id="shareBtn" class="btn btn-outline">
-                    🔗 Поделиться
-                </button>
+        <div class="field">
+            <label>Ставка (% годовых)</label>
+            <input id="rateInput" type="text" value="10">
+        </div>
+
+        <button id="startBtn" class="btn btn-primary" style="margin-top:10px;">
+            🚀 Запустить счётчик
+        </button>
+    </section>
+
+    <!-- COUNTER -->
+    <section id="counterView" class="hidden">
+
+        <div id="counterImgWrap" class="counter-img">
+            <img id="counterImg">
+        </div>
+
+        <h2 id="counterTitle" class="counter-title"></h2>
+
+        <div class="amount-block">
+            <div class="main-amount" id="mainAmount">
+                0
+                <div class="tooltip" id="growthTooltip"></div>
             </div>
-        </section>
-    </div>
+            <div class="info-line" id="elapsedInfo">Прошло: 0д 0ч 0м 0с</div>
+            <div class="info-line" id="detailsInfo"></div>
+        </div>
+
+        <div class="btns-row">
+            <button id="backBtn" class="btn btn-secondary">⚙️ Настройки</button>
+            <button id="shareBtn" class="btn btn-outline">🔗 Поделиться</button>
+        </div>
+
+    </section>
 </div>
 
-<div id="toastContainer" class="toast-container"></div>
 
+<!---------------------- TOASTS ---------------------->
+<div class="toast-container" id="toastContainer"></div>
+
+<!---------------------- SCRIPT ---------------------->
 <script>
     (function () {
         "use strict";
 
-        const MS_PER_SECOND = 1000;
-        const SECONDS_PER_DAY = 86400;
-        const SECONDS_PER_HOUR = 3600;
-        const SECONDS_PER_MINUTE = 60;
-        const SECONDS_PER_YEAR = 365 * 24 * 60 * 60;
+        const SEC = 1000;
+        const YEAR_SEC = 365 * 24 * 3600;
 
-        const state = {
-            name: "Процентный счётчик",
+        let state = {
+            name: "",
             imageUrl: "",
-            startDateString: "",
             startDate: null,
-            initialAmount: 1000000,
+            startDateStr: "",
+            amount: 1000000,
             rate: 10
         };
 
-        let timerId = null;
+        let timer = null;
 
-        // DOM-элементы
+        /* DOM */
         const settingsView = document.getElementById("settingsView");
         const counterView = document.getElementById("counterView");
 
@@ -574,461 +367,220 @@
         const amountInput = document.getElementById("amountInput");
         const rateInput = document.getElementById("rateInput");
 
-        const imagePreviewWrapper = document.getElementById("imagePreviewWrapper");
-        const imagePreview = document.getElementById("imagePreview");
+        const previewBtn = document.getElementById("previewBtn");
+        const clearImgBtn = document.getElementById("clearImgBtn");
 
-        const loadImageBtn = document.getElementById("loadImageBtn");
-        const clearImageBtn = document.getElementById("clearImageBtn");
-        const startCounterBtn = document.getElementById("startCounterBtn");
+        const previewWrap = document.getElementById("previewWrap");
+        const previewImg = document.getElementById("previewImg");
 
+        const startBtn = document.getElementById("startBtn");
+
+        const counterImgWrap = document.getElementById("counterImgWrap");
+        const counterImg = document.getElementById("counterImg");
         const counterTitle = document.getElementById("counterTitle");
-        const counterImageWrapper = document.getElementById("counterImageWrapper");
-        const counterImage = document.getElementById("counterImage");
+
         const mainAmountEl = document.getElementById("mainAmount");
-        const elapsedInfoEl = document.getElementById("elapsedInfo");
-        const detailsInfoEl = document.getElementById("detailsInfo");
-        const backToSettingsBtn = document.getElementById("backToSettingsBtn");
+        const growthTooltip = document.getElementById("growthTooltip");
+
+        const elapsedInfo = document.getElementById("elapsedInfo");
+        const detailsInfo = document.getElementById("detailsInfo");
+
+        const backBtn = document.getElementById("backBtn");
         const shareBtn = document.getElementById("shareBtn");
 
         const toastContainer = document.getElementById("toastContainer");
 
-        // ===== Утилиты =====
+        /* Utils */
 
-        function showToast(message, type) {
-            const toast = document.createElement("div");
-            toast.className = "toast toast--" + (type === "error" ? "error" : "success");
+        function toast(text, type) {
+            const t = document.createElement("div");
+            t.className = "toast " + (type === "error" ? "toast-error" : "toast-success");
+            t.textContent = text;
+            toastContainer.appendChild(t);
 
-            const iconSpan = document.createElement("span");
-            iconSpan.className = "toast-icon";
-            iconSpan.textContent = type === "error" ? "⚠️" : "✅";
-
-            const textSpan = document.createElement("span");
-            textSpan.textContent = message;
-
-            toast.appendChild(iconSpan);
-            toast.appendChild(textSpan);
-
-            toastContainer.appendChild(toast);
-
-            requestAnimationFrame(() => {
-                toast.classList.add("toast--visible");
-            });
+            requestAnimationFrame(() => t.classList.add("toast-visible"));
 
             setTimeout(() => {
-                toast.classList.remove("toast--visible");
-                setTimeout(() => {
-                    if (toast.parentNode) {
-                        toast.parentNode.removeChild(toast);
-                    }
-                }, 200);
-            }, 3000);
+                t.classList.remove("toast-visible");
+                setTimeout(() => t.remove(), 200);
+            }, 2500);
         }
 
-        function getNowAsLocalInputString() {
-            const now = new Date();
-            const pad = (n) => n.toString().padStart(2, "0");
-
-            const year = now.getFullYear();
-            const month = pad(now.getMonth() + 1);
-            const day = pad(now.getDate());
-            const hours = pad(now.getHours());
-            const minutes = pad(now.getMinutes());
-
-            return year + "-" + month + "-" + day + "T" + hours + ":" + minutes;
+        function nowLocalStr() {
+            const d = new Date();
+            const p = (n) => String(n).padStart(2, "0");
+            return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}T${p(d.getHours())}:${p(d.getMinutes())}`;
         }
 
-        function parseAmount(value) {
-            if (value == null) return NaN;
-            const cleaned = String(value).replace(/\s+/g, "").replace(",", ".");
-            const num = parseFloat(cleaned);
-            return Number.isFinite(num) ? num : NaN;
+        function parseRate(v) {
+            return parseFloat(String(v).replace(",", "."));
         }
 
-        function parseRate(value) {
-            if (!value) return NaN;
-            const cleaned = String(value)
-                .replace(",", ".")
-                .replace(/[^\d.\-]/g, "");
-            const num = parseFloat(cleaned);
-            return Number.isFinite(num) ? num : NaN;
-        }
+        function formatThousands(num) {
+            if (!Number.isFinite(num)) return "0";
 
-        function formatMainNumber(value) {
-            // Основное число — без разделителей тысяч, 2 знака после запятой
-            if (!Number.isFinite(value)) return "0";
-            const fixed = value.toFixed(2);
-            if (fixed.endsWith(".00")) {
-                return fixed.slice(0, -3);
+            const parts = num.toFixed(2);
+            if (parts.endsWith(".00")) {
+                return Number(num.toFixed(0)).toLocaleString("ru-RU");
             }
-            return fixed;
+            return Number(num.toFixed(2)).toLocaleString("ru-RU");
         }
 
-        function formatAmountInfo(value) {
-            if (!Number.isFinite(value)) return "0";
-            const parts = Math.trunc(value).toString().split("");
-            const res = [];
-            for (let i = 0; i < parts.length; i++) {
-                const idxFromEnd = parts.length - i;
-                res.push(parts[i]);
-                if (idxFromEnd > 1 && idxFromEnd % 3 === 1) {
-                    res.push(" ");
-                }
-            }
-            return res.join("").trim();
+        function timeParts(sec) {
+            sec = Math.max(0, sec);
+            const d = Math.floor(sec / 86400);
+            sec %= 86400;
+            const h = Math.floor(sec / 3600);
+            sec %= 3600;
+            const m = Math.floor(sec / 60);
+            const s = Math.floor(sec % 60);
+            return {d, h, m, s};
         }
 
-        function formatDateInfo(date) {
-            if (!(date instanceof Date) || isNaN(date.getTime())) return "";
-            const pad = (n) => n.toString().padStart(2, "0");
-            const dd = pad(date.getDate());
-            const mm = pad(date.getMonth() + 1);
-            const yyyy = date.getFullYear();
-            const hh = pad(date.getHours());
-            const min = pad(date.getMinutes());
-            return dd + "." + mm + "." + yyyy + " " + hh + ":" + min;
-        }
+        function loadPreview(url) {
+            if (!url) return toast("Введите URL", "error");
 
-        function isValidImageUrl(urlStr) {
-            if (!urlStr) return false;
-            try {
-                const url = new URL(urlStr);
-                if (!/^https?:$/.test(url.protocol)) return false;
-
-                const allowedExt = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
-                const path = url.pathname.toLowerCase();
-                const hasExt = allowedExt.some((ext) => path.endsWith(ext));
-
-                const host = url.hostname.toLowerCase();
-                const popularHosts = [
-                    "imgur.com",
-                    "i.imgur.com",
-                    "ibb.co",
-                    "i.ibb.co",
-                    "postimg.cc",
-                    "vk.com",
-                    "userapi.com",
-                    "sun9"
-                ];
-                const isPopular = popularHosts.some((h) => host.includes(h));
-
-                return hasExt || isPopular;
-            } catch (e) {
-                return false;
-            }
-        }
-
-        function loadPreviewImage(url) {
-            if (!url) {
-                showToast("Введите ссылку на картинку.", "error");
-                return;
-            }
-
-            if (!isValidImageUrl(url)) {
-                showToast("Некорректный URL картинки.", "error");
-                return;
-            }
-
-            imagePreview.onload = function () {
-                imagePreviewWrapper.classList.add("visible");
+            previewImg.src = url;
+            previewImg.onload = () => previewWrap.classList.add("visible");
+            previewImg.onerror = () => {
+                previewWrap.classList.remove("visible");
+                previewImg.removeAttribute("src");
+                toast("Ошибка загрузки", "error");
             };
-            imagePreview.onerror = function () {
-                imagePreviewWrapper.classList.remove("visible");
-                imagePreview.removeAttribute("src");
-                showToast("Не удалось загрузить картинку.", "error");
-            };
-            imagePreview.src = url;
         }
 
-        function clearPreviewImage() {
-            imageInput.value = "";
-            imagePreviewWrapper.classList.remove("visible");
-            imagePreview.removeAttribute("src");
-            state.imageUrl = "";
+        function applyInputs() {
+            state.name = nameInput.value.trim() || "Счётчик";
+            state.imageUrl = imageInput.value.trim();
+
+            const dateStr = startDateInput.value || nowLocalStr();
+            state.startDateStr = dateStr;
+            state.startDate = new Date(dateStr);
+
+            state.amount = Number(amountInput.value || 1000000);
+            state.rate = parseRate(rateInput.value || "10");
         }
 
-        function copyToClipboard(text) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                return navigator.clipboard.writeText(text).then(
-                    () => true,
-                    () => false
-                );
-            }
+        function buildURL() {
+            const p = new URLSearchParams();
+            p.set("name", state.name);
+            if (state.imageUrl) p.set("image", state.imageUrl);
+            p.set("startDate", state.startDateStr);
+            p.set("amount", state.amount);
+            p.set("rate", state.rate);
+            p.set("autoStart", "true");
 
-            try {
-                const textarea = document.createElement("textarea");
-                textarea.value = text;
-                textarea.style.position = "fixed";
-                textarea.style.opacity = "0";
-                document.body.appendChild(textarea);
-                textarea.focus();
-                textarea.select();
-                const result = document.execCommand("copy");
-                document.body.removeChild(textarea);
-                return Promise.resolve(result);
-            } catch (e) {
-                return Promise.resolve(false);
-            }
+            return location.origin + location.pathname + "?" + p.toString();
         }
 
-        function buildUrlFromState() {
-            const params = new URLSearchParams();
-            params.set("name", state.name);
-            if (state.imageUrl) {
-                params.set("image", state.imageUrl);
-            }
-            if (state.startDateString) {
-                params.set("startDate", state.startDateString);
-            }
-            params.set("amount", String(state.initialAmount));
-            params.set("rate", String(state.rate).replace(".", ","));
-            params.set("autoStart", "true");
+        /* Counter */
 
-            return window.location.origin + window.location.pathname + "?" + params.toString();
-        }
-
-        function computeElapsed(secondsTotal) {
-            const s = Math.max(0, Math.floor(secondsTotal));
-            const days = Math.floor(s / SECONDS_PER_DAY);
-            let rest = s % SECONDS_PER_DAY;
-            const hours = Math.floor(rest / SECONDS_PER_HOUR);
-            rest %= SECONDS_PER_HOUR;
-            const minutes = Math.floor(rest / SECONDS_PER_MINUTE);
-            const seconds = rest % SECONDS_PER_MINUTE;
-
-            return { days, hours, minutes, seconds };
-        }
-
-        function updateCounterDisplay() {
-            if (!state.startDate || isNaN(state.startDate.getTime())) {
-                return;
-            }
-
+        function updateCounter() {
             const now = new Date();
-            const elapsedSeconds = Math.max(
-                0,
-                Math.floor((now.getTime() - state.startDate.getTime()) / MS_PER_SECOND)
-            );
+            const elapsedSec = Math.floor((now - state.startDate) / 1000);
+            const years = elapsedSec / YEAR_SEC;
 
-            const elapsedYears = elapsedSeconds / SECONDS_PER_YEAR;
-            const annualRate = state.rate;
-            const P = state.initialAmount;
+            const current = state.amount * Math.pow(1 + state.rate/100, years);
 
-            const growthFactor = Math.pow(1 + annualRate / 100, elapsedYears);
-            const currentAmount = P * growthFactor;
+            mainAmountEl.childNodes[0].textContent = formatThousands(current);
 
-            mainAmountEl.textContent = formatMainNumber(currentAmount);
+            const parts = timeParts(elapsedSec);
+            elapsedInfo.textContent = `Прошло: ${parts.d}д ${parts.h}ч ${parts.m}м ${parts.s}с`;
 
-            const elapsed = computeElapsed(elapsedSeconds);
-            elapsedInfoEl.textContent =
-                "⏱ Прошло: " +
-                elapsed.days + "д " +
-                elapsed.hours + "ч " +
-                elapsed.minutes + "м " +
-                elapsed.seconds + "с";
+            detailsInfo.textContent =
+                `${formatThousands(state.amount)} с ${state.startDateStr.replace("T"," ")} под ${state.rate}%`;
 
-            const startDateStr = formatDateInfo(state.startDate);
-            const initialStr = formatAmountInfo(state.initialAmount);
-            const rateStr = String(state.rate).replace(".", ",");
+            /* приросты */
+            const perSecondRate = state.amount * (Math.pow(1 + state.rate/100, 1 / YEAR_SEC) - 1);
+            const perHour = perSecondRate * 3600;
+            const perDay = perSecondRate * 86400;
 
-            detailsInfoEl.textContent =
-                "ℹ️ (" + initialStr + " с " + startDateStr + " под " + rateStr + "%)";
+            growthTooltip.textContent = `+${formatThousands(perHour)} в час\n+${formatThousands(perDay)} в день`;
         }
 
-        function enterCounterMode() {
-            if (timerId !== null) {
-                clearInterval(timerId);
-                timerId = null;
-            }
-
-            const titleText = state.name || "Процентный счётчик";
-            counterTitle.textContent = "💰 " + titleText;
+        function startCounter() {
+            counterTitle.textContent = "💰 " + state.name;
 
             if (state.imageUrl) {
-                counterImageWrapper.classList.add("visible");
-                counterImage.onload = function () {
-                    // картинка успешно показана
-                };
-                counterImage.onerror = function () {
-                    counterImageWrapper.classList.remove("visible");
-                    counterImage.removeAttribute("src");
-                    showToast("Не удалось загрузить картинку для счётчика.", "error");
-                };
-                counterImage.src = state.imageUrl;
+                counterImgWrap.classList.add("visible");
+                counterImg.src = state.imageUrl;
             } else {
-                counterImageWrapper.classList.remove("visible");
-                counterImage.removeAttribute("src");
+                counterImgWrap.classList.remove("visible");
+                counterImg.removeAttribute("src");
             }
 
             settingsView.classList.add("hidden");
             counterView.classList.remove("hidden");
 
-            updateCounterDisplay();
-            timerId = setInterval(updateCounterDisplay, 1000);
+            updateCounter();
+            timer = setInterval(updateCounter, 1000);
         }
 
-        function enterSettingsMode() {
-            if (timerId !== null) {
-                clearInterval(timerId);
-                timerId = null;
-            }
-
+        function toSettings() {
+            clearInterval(timer);
             counterView.classList.add("hidden");
             settingsView.classList.remove("hidden");
         }
 
-        function applyInputsToState() {
-            const name = (nameInput.value || "").trim();
-            state.name = name || "Процентный счётчик";
+        /* Init from URL */
 
-            const imageUrl = (imageInput.value || "").trim();
-            state.imageUrl = imageUrl;
-
-            const startDateStr = startDateInput.value || getNowAsLocalInputString();
-            state.startDateString = startDateStr;
-            state.startDate = new Date(startDateStr);
-
-            const amount = parseAmount(amountInput.value || "1000000");
-            const rate = parseRate(rateInput.value || "10");
-
-            state.initialAmount = amount;
-            state.rate = rate;
-
-            return { amount, rate };
-        }
-
-        function initFromUrlParams() {
-            const params = new URLSearchParams(window.location.search);
-            if ([...params.keys()].length === 0) {
-                // дефолтные значения
-                const nowStr = getNowAsLocalInputString();
-                startDateInput.value = nowStr;
-                amountInput.value = "1000000";
-                rateInput.value = "10";
+        function initFromURL() {
+            const p = new URLSearchParams(location.search);
+            if (!p.has("name")) {
+                startDateInput.value = nowLocalStr();
                 return;
             }
 
-            const name = params.get("name") || "";
-            const image = params.get("image") || "";
-            const startDate = params.get("startDate") || "";
-            const amount = params.get("amount") || "";
-            const rate = params.get("rate") || "";
-            const autoStartParam = params.get("autoStart") || "";
-
-            if (name) {
-                nameInput.value = name;
+            if (p.get("name")) nameInput.value = p.get("name");
+            if (p.get("image")) {
+                imageInput.value = p.get("image");
+                loadPreview(p.get("image"));
             }
-            if (image) {
-                imageInput.value = image;
-                if (isValidImageUrl(image)) {
-                    loadPreviewImage(image);
-                }
-            }
-            if (startDate) {
-                startDateInput.value = startDate;
-            } else {
-                startDateInput.value = getNowAsLocalInputString();
-            }
+            if (p.get("startDate")) startDateInput.value = p.get("startDate");
+            if (p.get("amount")) amountInput.value = p.get("amount");
+            if (p.get("rate")) rateInput.value = p.get("rate");
 
-            if (amount) {
-                amountInput.value = amount;
-            } else {
-                amountInput.value = "1000000";
-            }
-
-            if (rate) {
-                rateInput.value = rate;
-            } else {
-                rateInput.value = "10";
-            }
-
-            const autoStart = autoStartParam.toLowerCase() === "true";
-
-            if (autoStart) {
-                const { amount: parsedAmount, rate: parsedRate } = applyInputsToState();
-
-                if (!Number.isFinite(parsedAmount) || parsedAmount <= 0) {
-                    showToast("Некорректная начальная сумма в ссылке.", "error");
-                    return;
-                }
-                if (!Number.isFinite(parsedRate)) {
-                    showToast("Некорректная ставка в ссылке.", "error");
-                    return;
-                }
-
-                enterCounterMode();
+            if (p.get("autoStart") === "true") {
+                applyInputs();
+                startCounter();
             }
         }
 
-        // ===== Обработчики =====
+        /* Listeners */
 
-        loadImageBtn.addEventListener("click", function () {
-            const url = (imageInput.value || "").trim();
-            loadPreviewImage(url);
-        });
+        previewBtn.onclick = () => loadPreview(imageInput.value.trim());
+        clearImgBtn.onclick = () => {
+            imageInput.value = "";
+            previewWrap.classList.remove("visible");
+            previewImg.removeAttribute("src");
+        };
 
-        clearImageBtn.addEventListener("click", function () {
-            clearPreviewImage();
-        });
+        startBtn.onclick = () => {
+            applyInputs();
+            if (state.amount <= 0) return toast("Некорректная сумма", "error");
+            if (!Number.isFinite(state.rate)) return toast("Некорректная ставка", "error");
 
-        startCounterBtn.addEventListener("click", function () {
-            const { amount, rate } = applyInputsToState();
+            const url = buildURL();
+            navigator.clipboard.writeText(url).catch(() => 0);
+            history.replaceState({}, "", url);
+            toast("Ссылка скопирована", "success");
 
-            if (!Number.isFinite(amount) || amount <= 0) {
-                showToast("Введите корректную начальную сумму.", "error");
-                return;
-            }
-            if (!Number.isFinite(rate)) {
-                showToast("Введите корректную годовую ставку.", "error");
-                return;
-            }
+            startCounter();
+        };
 
-            const url = buildUrlFromState();
-            try {
-                window.history.replaceState({}, "", url);
-            } catch (e) {
-                // игнорируем, если браузер не позволил
-            }
+        backBtn.onclick = () => toSettings();
 
-            copyToClipboard(url).then((ok) => {
-                if (ok) {
-                    showToast("🔗 Ссылка на счётчик скопирована в буфер обмена.", "success");
-                } else {
-                    showToast("Не удалось автоматически скопировать ссылку.", "error");
-                }
-            });
+        shareBtn.onclick = () => {
+            navigator.clipboard.writeText(location.href)
+                .then(() => toast("Скопировано", "success"))
+                .catch(() => toast("Ошибка", "error"));
+        };
 
-            enterCounterMode();
-        });
+        /* Start */
 
-        backToSettingsBtn.addEventListener("click", function () {
-            enterSettingsMode();
-        });
-
-        shareBtn.addEventListener("click", function () {
-            const currentUrl = window.location.href;
-            copyToClipboard(currentUrl).then((ok) => {
-                if (ok) {
-                    showToast("🔗 Текущая ссылка скопирована в буфер обмена.", "success");
-                } else {
-                    showToast("Не удалось скопировать ссылку.", "error");
-                }
-            });
-        });
-
-        // Инициализация
-        document.addEventListener("DOMContentLoaded", function () {
-            initFromUrlParams();
-            if (!startDateInput.value) {
-                startDateInput.value = getNowAsLocalInputString();
-            }
-            if (!amountInput.value) {
-                amountInput.value = "1000000";
-            }
-            if (!rateInput.value) {
-                rateInput.value = "10";
-            }
-        });
+        document.addEventListener("DOMContentLoaded", initFromURL);
     })();
 </script>
+
 </body>
 </html>
