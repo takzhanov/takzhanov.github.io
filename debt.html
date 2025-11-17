@@ -247,11 +247,6 @@
         </div>
 
         <button onclick="startAndShare()" class="share-btn">Запустить счётчик</button>
-
-        <div class="share-link" id="shareLinkContainer" style="display: none;">
-            <strong>Ссылка для общего доступа:</strong><br>
-            <a href="" id="shareLink" target="_blank"></a>
-        </div>
     </div>
 
     <!-- Режим счётчика -->
@@ -284,8 +279,6 @@
     // Элементы DOM
     const configMode = document.getElementById('configMode');
     const counterMode = document.getElementById('counterMode');
-    const shareLinkContainer = document.getElementById('shareLinkContainer');
-    const shareLink = document.getElementById('shareLink');
     const counterTitle = document.getElementById('counterTitle');
     const notification = document.getElementById('notification');
     const imageUpload = document.getElementById('imageUpload');
@@ -353,7 +346,6 @@
                 imagePreview.style.display = 'block';
                 counterImage.src = imageData;
                 counterImage.style.display = 'block';
-                generateShareLink();
             };
             reader.readAsDataURL(file);
         }
@@ -398,7 +390,7 @@
         startCounter();
         if (counterMode.style.display === 'block') {
             generateShareLink();
-            copyToClipboard(shareLink.href);
+            copyToClipboard(generateShareLink());
             showNotification('Счётчик запущен и ссылка скопирована!');
         }
     }
@@ -471,9 +463,6 @@
         }
 
         const shareUrl = `${baseUrl}?${params.toString()}`;
-        shareLink.href = shareUrl;
-        shareLink.textContent = shareUrl;
-        shareLinkContainer.style.display = 'block';
         return shareUrl;
     }
 
@@ -513,12 +502,6 @@
             notification.classList.remove('show');
         }, 3000);
     }
-
-    // Обновляем ссылку при изменении настроек
-    document.getElementById('counterName').addEventListener('input', generateShareLink);
-    document.getElementById('startDate').addEventListener('change', generateShareLink);
-    document.getElementById('initialAmount').addEventListener('input', generateShareLink);
-    document.getElementById('interestRate').addEventListener('input', generateShareLink);
 
     // Инициализация при загрузке
     window.onload = initFromURL;
