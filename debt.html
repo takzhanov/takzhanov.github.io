@@ -3,47 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Процентный счётчик</title>
+    <title>💰 Процентный счётчик</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #667eea;
-            --secondary-color: #764ba2;
-            --white: #ffffff;
-            --text-color: #333333;
-            --border-radius: 12px;
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            --transition: all 0.3s ease;
+            --primary: #6C63FF;
+            --primary-light: #8A84FF;
+            --primary-dark: #5752CC;
+            --secondary: #FF6584;
+            --accent: #00D4AA;
+            --dark: #2A2D3E;
+            --light: #F7F9FC;
+            --gray: #A0A4B8;
+            --border-radius: 16px;
+            --shadow: 0 10px 30px rgba(108, 99, 255, 0.15);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             padding: 20px;
-            color: var(--text-color);
+            font-family: 'Montserrat', sans-serif;
+            color: var(--dark);
         }
 
         .container {
-            background-color: var(--white);
+            background-color: var(--light);
             border-radius: var(--border-radius);
             box-shadow: var(--shadow);
             width: 100%;
-            max-width: 600px;
+            max-width: 700px;
             overflow: hidden;
             transition: var(--transition);
         }
 
         .page {
-            padding: 30px;
+            padding: 35px;
             display: none;
         }
 
@@ -51,77 +56,129 @@
             display: block;
         }
 
-        h1 {
+        .header {
             text-align: center;
-            margin-bottom: 25px;
-            color: var(--primary-color);
-            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         h2 {
-            margin-bottom: 20px;
-            font-weight: 500;
-            color: var(--secondary-color);
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            color: var(--dark);
+            font-weight: 600;
+            position: relative;
+            display: inline-block;
+        }
+
+        h2:after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 2px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 500;
+            color: var(--dark);
+            font-size: 0.95rem;
         }
 
         input, button {
             width: 100%;
-            padding: 12px 15px;
-            border-radius: 8px;
-            border: 1px solid #ddd;
+            padding: 14px 18px;
+            border-radius: 10px;
+            border: 2px solid #E6E9F0;
             font-size: 16px;
             transition: var(--transition);
+            font-family: 'Montserrat', sans-serif;
         }
 
         input:focus {
             outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
         }
 
         button {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
             color: white;
             border: none;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
             margin-top: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+            opacity: 0;
+            transition: var(--transition);
         }
 
         button:hover {
-            background-color: var(--secondary-color);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(108, 99, 255, 0.3);
+        }
+
+        button:hover:after {
+            opacity: 1;
+        }
+
+        button span {
+            position: relative;
+            z-index: 1;
         }
 
         button.secondary {
-            background-color: #f0f0f0;
-            color: var(--text-color);
+            background: var(--light);
+            color: var(--primary);
+            border: 2px solid var(--primary);
         }
 
         button.secondary:hover {
-            background-color: #e0e0e0;
+            background: var(--primary);
+            color: white;
         }
 
         .image-preview {
             margin-top: 15px;
             text-align: center;
             display: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
         }
 
         .image-preview img {
             max-width: 100%;
             max-height: 250px;
-            border-radius: 8px;
             object-fit: contain;
         }
 
@@ -132,62 +189,79 @@
 
         .counter-image {
             max-width: 100%;
-            max-height: 300px;
-            margin: 0 auto 20px;
+            max-height: 320px;
+            margin: 0 auto 25px;
             display: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
         }
 
         .counter-image img {
             max-width: 100%;
-            max-height: 300px;
-            border-radius: 8px;
+            max-height: 320px;
             object-fit: contain;
         }
 
         .counter-title {
-            font-size: 1.8rem;
+            font-size: 2rem;
             margin-bottom: 30px;
-            color: var(--secondary-color);
+            color: var(--primary);
+            font-weight: 700;
         }
 
         .counter-value {
-            font-family: 'Courier New', Courier, monospace;
-            font-size: clamp(2.5rem, 5vw, 4.5rem);
-            font-weight: bold;
+            font-family: 'Roboto Mono', monospace;
+            font-size: clamp(2.8rem, 6vw, 5rem);
+            font-weight: 700;
             margin-bottom: 20px;
-            color: var(--primary-color);
+            color: var(--primary);
             overflow: hidden;
             min-height: 1.2em;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .counter-info {
-            margin-bottom: 10px;
-            font-size: 1.1rem;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            color: var(--dark);
+            font-weight: 500;
         }
 
         .counter-details {
-            color: #666;
+            color: var(--gray);
             font-size: 1rem;
+            margin-bottom: 10px;
         }
 
         .counter-controls {
             display: flex;
             gap: 15px;
-            margin-top: 30px;
+            margin-top: 35px;
+        }
+
+        .counter-controls button {
+            flex: 1;
         }
 
         .notification {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: 8px;
+            top: 25px;
+            right: 25px;
+            padding: 16px 22px;
+            border-radius: 12px;
             color: white;
-            font-weight: 500;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
             transform: translateX(150%);
-            transition: transform 0.3s ease;
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
             z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .notification.show {
@@ -195,25 +269,49 @@
         }
 
         .notification.success {
-            background-color: #4CAF50;
+            background: linear-gradient(135deg, var(--accent), #00B894);
         }
 
         .notification.error {
-            background-color: #F44336;
+            background: linear-gradient(135deg, var(--secondary), #E84393);
+        }
+
+        .notification-icon {
+            font-size: 1.2rem;
         }
 
         .image-controls {
             display: flex;
-            gap: 10px;
+            gap: 12px;
         }
 
         .image-controls button {
             flex: 1;
         }
 
-        @media (max-width: 480px) {
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .tag {
+            display: inline-block;
+            background: rgba(108, 99, 255, 0.1);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+
+        @media (max-width: 768px) {
             .page {
-                padding: 20px;
+                padding: 25px;
             }
 
             .counter-controls {
@@ -223,6 +321,51 @@
             .counter-image img {
                 max-height: 250px;
             }
+
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            h2 {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* Анимация загрузки для изображений */
+        .loading {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        /* Анимация появления */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease forwards;
         }
     </style>
 </head>
@@ -230,41 +373,48 @@
 <div class="container">
     <!-- Страница настроек -->
     <div id="settings-page" class="page active">
-        <h1>Настройки счётчика</h1>
+        <div class="header">
+            <h1>💰 Процентный счётчик</h1>
+            <p>Создайте свой счётчик сложных процентов</p>
+        </div>
+
+        <h2>Настройки</h2>
 
         <div class="form-group">
-            <label for="counter-name">Название счётчика</label>
-            <input type="text" id="counter-name" placeholder="Введите название">
+            <label for="counter-name">Название счётчика <span class="tag">Обязательно</span></label>
+            <input type="text" id="counter-name" placeholder="Введите название" value="Мой инвестиционный счёт">
         </div>
 
         <div class="form-group">
             <label for="image-url">Ссылка на картинку</label>
-            <input type="url" id="image-url" placeholder="https://example.com/image.jpg">
+            <input type="url" id="image-url" placeholder="https://example.com/image.jpg" value="https://images.unsplash.com/photo-1554224155-6726b3ff858f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80">
             <div class="image-controls">
-                <button id="load-image" class="secondary">Загрузить</button>
-                <button id="remove-image" class="secondary">Убрать картинку</button>
+                <button id="load-image" class="secondary"><span>🖼️ Загрузить</span></button>
+                <button id="remove-image" class="secondary"><span>❌ Убрать картинку</span></button>
             </div>
             <div id="image-preview" class="image-preview">
                 <img src="" alt="Предпросмотр">
             </div>
         </div>
 
-        <div class="form-group">
-            <label for="start-date">Дата и время начала</label>
-            <input type="datetime-local" id="start-date">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="start-date">Дата и время начала <span class="tag">Обязательно</span></label>
+                <input type="datetime-local" id="start-date">
+            </div>
+
+            <div class="form-group">
+                <label for="initial-amount">Начальная сумма</label>
+                <input type="number" id="initial-amount" value="1000000" min="0" step="1000">
+            </div>
         </div>
 
         <div class="form-group">
-            <label for="initial-amount">Начальная сумма</label>
-            <input type="number" id="initial-amount" value="1000000" min="0">
+            <label for="annual-rate">Годовая ставка (%) <span class="tag">Обязательно</span></label>
+            <input type="text" id="annual-rate" placeholder="Например: 10.5" value="12.5">
         </div>
 
-        <div class="form-group">
-            <label for="annual-rate">Годовая ставка (%)</label>
-            <input type="text" id="annual-rate" placeholder="10.5">
-        </div>
-
-        <button id="start-counter">Запустить счётчик</button>
+        <button id="start-counter"><span>🚀 Запустить счётчик</span></button>
     </div>
 
     <!-- Страница счётчика -->
@@ -276,19 +426,22 @@
         <h2 id="counter-title" class="counter-title"></h2>
 
         <div class="counter-display">
-            <div id="counter-value" class="counter-value">0</div>
+            <div id="counter-value" class="counter-value">0.00</div>
             <div id="counter-info" class="counter-info"></div>
             <div id="counter-details" class="counter-details"></div>
         </div>
 
         <div class="counter-controls">
-            <button id="back-to-settings" class="secondary">Настройки</button>
-            <button id="share-counter">Поделиться</button>
+            <button id="back-to-settings" class="secondary"><span>⚙️ Настройки</span></button>
+            <button id="share-counter"><span>📤 Поделиться</span></button>
         </div>
     </div>
 </div>
 
-<div id="notification" class="notification"></div>
+<div id="notification" class="notification">
+    <span class="notification-icon">💫</span>
+    <span class="notification-text"></span>
+</div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -316,10 +469,19 @@
 
         // Уведомление
         const notification = document.getElementById('notification');
+        const notificationText = notification.querySelector('.notification-text');
 
         // Установка текущей даты и времени по умолчанию
         const now = new Date();
-        startDateInput.value = now.toISOString().slice(0, 16);
+        // Устанавливаем на 30 дней назад для демонстрации
+        const monthAgo = new Date(now);
+        monthAgo.setDate(monthAgo.getDate() - 30);
+        startDateInput.value = monthAgo.toISOString().slice(0, 16);
+
+        // Загружаем изображение по умолчанию
+        setTimeout(() => {
+            loadDefaultImage();
+        }, 500);
 
         // Переменные для работы счётчика
         let updateInterval;
@@ -333,23 +495,7 @@
                 return;
             }
 
-            if (!isValidImageUrl(imageUrl)) {
-                showNotification('Некорректный URL изображения', 'error');
-                return;
-            }
-
-            const img = imagePreview.querySelector('img');
-            img.src = imageUrl;
-
-            img.onload = function() {
-                imagePreview.style.display = 'block';
-                showNotification('Изображение загружено', 'success');
-            };
-
-            img.onerror = function() {
-                imagePreview.style.display = 'none';
-                showNotification('Ошибка загрузки изображения', 'error');
-            };
+            loadImagePreview(imageUrl);
         });
 
         // Удаление изображения
@@ -401,6 +547,42 @@
 
             copyShareUrl(counterData);
         });
+
+        // Загрузка изображения по умолчанию
+        function loadDefaultImage() {
+            const defaultImageUrl = imageUrlInput.value;
+            if (defaultImageUrl) {
+                loadImagePreview(defaultImageUrl);
+            }
+        }
+
+        // Загрузка изображения для предпросмотра
+        function loadImagePreview(imageUrl) {
+            // Очистка параметров из URL для проверки
+            const cleanUrl = imageUrl.split('?')[0];
+
+            if (!isValidImageUrl(cleanUrl)) {
+                showNotification('Некорректный URL изображения', 'error');
+                return;
+            }
+
+            const img = imagePreview.querySelector('img');
+            img.classList.add('loading');
+            imagePreview.style.display = 'block';
+
+            img.onload = function() {
+                img.classList.remove('loading');
+                showNotification('Изображение загружено', 'success');
+            };
+
+            img.onerror = function() {
+                img.classList.remove('loading');
+                imagePreview.style.display = 'none';
+                showNotification('Ошибка загрузки изображения', 'error');
+            };
+
+            img.src = imageUrl;
+        }
 
         // Валидация формы
         function validateForm() {
@@ -455,9 +637,16 @@
             settingsPage.classList.remove('active');
             counterPage.classList.add('active');
 
+            // Добавляем анимацию появления
+            const elements = counterPage.querySelectorAll('.counter-title, .counter-value, .counter-info, .counter-details, .counter-controls');
+            elements.forEach((el, index) => {
+                el.classList.add('fade-in');
+                el.style.animationDelay = `${index * 0.1}s`;
+            });
+
             // Запуск обновления счётчика
             updateCounter(counterData);
-            updateInterval = setInterval(() => updateCounter(counterData), 1000);
+            updateInterval = setInterval(() => updateCounter(counterData), 100);
         }
 
         // Обновление счётчика
@@ -478,47 +667,69 @@
             const seconds = Math.floor(elapsedSeconds % 60);
 
             // Обновление отображения
-            animateNumber(counterValue, Math.floor(currentAmount));
+            animateNumber(counterValue, currentAmount);
             counterInfo.textContent = `Прошло: ${days}д ${hours}ч ${minutes}м ${seconds}с`;
 
             const formattedDate = startDate.toLocaleDateString('ru-RU');
+            const formattedInitialAmount = formatNumber(counterData.initialAmount);
             counterDetails.textContent =
-                `(начальная сумма ${formatNumber(counterData.initialAmount)} с ${formattedDate} под ${counterData.annualRate}%)`;
+                `(начальная сумма ${formattedInitialAmount} с ${formattedDate} под ${counterData.annualRate}%)`;
         }
 
         // Анимация числа
         function animateNumber(element, targetValue) {
-            const currentValue = parseFloat(element.textContent.replace(/\s/g, '')) || 0;
+            const currentText = element.textContent.replace(/\s/g, '').replace(',', '.');
+            const currentValue = parseFloat(currentText) || 0;
 
-            if (currentValue === targetValue) return;
+            if (Math.abs(currentValue - targetValue) < 0.01) {
+                element.textContent = formatCurrency(targetValue);
+                return;
+            }
 
-            // Простая анимация - сразу устанавливаем новое значение
-            // В реальном приложении можно добавить плавную анимацию
-            element.textContent = formatNumber(targetValue);
+            // Плавное изменение значения
+            const diff = targetValue - currentValue;
+            const change = diff * 0.1; // 10% от разницы
+
+            element.textContent = formatCurrency(currentValue + change);
         }
 
-        // Форматирование числа (без разделителей тысяч)
+        // Форматирование валюты (с копейками и разделителями тысяч)
+        function formatCurrency(num) {
+            // Форматируем с двумя знаками после запятой
+            const formatted = num.toFixed(2);
+
+            // Разделяем на целую и дробную части
+            const parts = formatted.split('.');
+            let integerPart = parts[0];
+            const decimalPart = parts[1];
+
+            // Добавляем разделители тысяч
+            integerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+
+            return `${integerPart}.${decimalPart}`;
+        }
+
+        // Форматирование числа (без копеек)
         function formatNumber(num) {
-            return num.toString();
+            return num.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
         }
 
         // Проверка валидности URL изображения
         function isValidImageUrl(url) {
-            const imageExtensions = /\.(jpg|jpeg|png|gif|webp|svg)$/i;
-            const imageHosts = [
-                'imgur.com', 'picsum.photos', 'unsplash.com', 'pexels.com',
-                'flickr.com', 'imageshack.com', 'postimg.cc', 'imgbox.com'
-            ];
-
-            return imageExtensions.test(url) ||
-                imageHosts.some(host => url.includes(host));
+            // Разрешаем все URL, так как многие содержат параметры
+            // Более строгая проверка может блокировать рабочие URL
+            return url.length > 0;
         }
 
         // Показать уведомление
         function showNotification(message, type) {
-            notification.textContent = message;
+            notificationText.textContent = message;
             notification.className = `notification ${type}`;
             notification.classList.add('show');
+
+            // Обновляем иконку в зависимости от типа уведомления
+            const icon = notification.querySelector('.notification-icon');
+            icon.textContent = type === 'success' ? '✅' : '❌';
 
             setTimeout(() => {
                 notification.classList.remove('show');
@@ -539,10 +750,17 @@
 
             navigator.clipboard.writeText(shareUrl)
                 .then(() => {
-                    showNotification('Ссылка скопирована в буфер', 'success');
+                    showNotification('Ссылка скопирована в буфер!', 'success');
                 })
                 .catch(() => {
-                    showNotification('Не удалось скопировать ссылку', 'error');
+                    // Fallback для старых браузеров
+                    const textArea = document.createElement('textarea');
+                    textArea.value = shareUrl;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    showNotification('Ссылка скопирована в буфер!', 'success');
                 });
         }
 
@@ -554,7 +772,7 @@
 
             try {
                 return {
-                    name: urlParams.get('name') || 'Мой счётчик',
+                    name: urlParams.get('name') || 'Мой инвестиционный счёт',
                     imageUrl: urlParams.has('image') ? decodeURIComponent(urlParams.get('image')) : '',
                     startDate: urlParams.get('startDate'),
                     initialAmount: parseFloat(urlParams.get('amount')),
@@ -578,15 +796,13 @@
 
             // Загружаем изображение, если есть
             if (urlCounterData.imageUrl) {
-                const img = imagePreview.querySelector('img');
-                img.src = urlCounterData.imageUrl;
-                img.onload = function() {
-                    imagePreview.style.display = 'block';
-                };
+                loadImagePreview(urlCounterData.imageUrl);
             }
 
             // Запускаем счётчик
-            switchToCounterPage(urlCounterData);
+            setTimeout(() => {
+                switchToCounterPage(urlCounterData);
+            }, 500);
         }
     });
 </script>
