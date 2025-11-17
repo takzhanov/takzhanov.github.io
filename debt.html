@@ -24,7 +24,7 @@
         .container {
             background: white;
             border-radius: 20px;
-            padding: 40px;
+            padding: 30px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
             max-width: 500px;
             width: 100%;
@@ -33,8 +33,8 @@
         h1 {
             text-align: center;
             color: #333;
-            margin-bottom: 30px;
-            font-size: 2em;
+            margin-bottom: 25px;
+            font-size: 1.8em;
         }
 
         .input-group {
@@ -88,21 +88,30 @@
             background: linear-gradient(135deg, #20c997 0%, #1a9f7a 100%);
         }
 
+        .remove-btn {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            padding: 8px;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
         .result {
-            margin-top: 30px;
+            margin-top: 25px;
             text-align: center;
-            padding: 30px;
+            padding: 25px;
             background: #f8f9fa;
             border-radius: 15px;
             border: 2px dashed #ddd;
         }
 
         .percentage {
-            font-size: 4em;
+            font-size: clamp(2.5em, 8vw, 4em);
             font-weight: bold;
             color: #667eea;
-            margin: 20px 0;
+            margin: 15px 0;
             font-family: 'Courier New', monospace;
+            word-break: break-all;
+            overflow-wrap: break-word;
         }
 
         .info {
@@ -121,33 +130,39 @@
         }
 
         .image-preview {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
+            max-width: 150px;
+            max-height: 150px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
             border-radius: 10px;
             margin: 10px auto;
             display: block;
             border: 2px solid #ddd;
         }
 
-        .image-preview-small {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
+        .counter-image {
+            max-width: 80px;
+            max-height: 80px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
             border-radius: 8px;
-            margin-right: 15px;
+            margin-bottom: 15px;
             border: 2px solid #ddd;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .counter-header {
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            text-align: center;
             margin-bottom: 20px;
         }
 
         .counter-title {
             margin: 0;
+            font-size: 1.6em;
         }
 
         .notification {
@@ -204,6 +219,39 @@
             text-align: center;
             cursor: pointer;
         }
+
+        .image-controls {
+            text-align: center;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+                margin: 10px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 20px;
+            }
+
+            .percentage {
+                font-size: 2.2em;
+            }
+
+            .counter-title {
+                font-size: 1.4em;
+            }
+
+            .counter-image {
+                max-width: 60px;
+                max-height: 60px;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+        }
     </style>
 </head>
 <body>
@@ -228,7 +276,10 @@
                 <div class="file-input-button">Выбрать картинку</div>
                 <input type="file" id="imageUpload" accept="image/*">
             </div>
-            <img id="imagePreview" class="image-preview" style="display: none;">
+            <div class="image-controls">
+                <img id="imagePreview" class="image-preview" style="display: none;">
+                <button id="removeImageBtn" class="remove-btn" style="display: none;">Убрать картинку</button>
+            </div>
         </div>
 
         <div class="input-group">
@@ -252,7 +303,7 @@
     <!-- Режим счётчика -->
     <div class="counter-mode" id="counterMode">
         <div class="counter-header">
-            <img id="counterImage" class="image-preview-small" style="display: none;">
+            <img id="counterImage" class="counter-image" style="display: none;">
             <h1 class="counter-title" id="counterTitle">💰 Счётчик</h1>
         </div>
 
@@ -284,6 +335,7 @@
     const imageUpload = document.getElementById('imageUpload');
     const imagePreview = document.getElementById('imagePreview');
     const counterImage = document.getElementById('counterImage');
+    const removeImageBtn = document.getElementById('removeImageBtn');
 
     // Инициализация из URL параметров
     function initFromURL() {
@@ -303,6 +355,7 @@
             imagePreview.style.display = 'block';
             counterImage.src = urlImage;
             counterImage.style.display = 'block';
+            removeImageBtn.style.display = 'block';
         }
 
         // Дата начала
@@ -339,16 +392,63 @@
     imageUpload.addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) {
+            // Проверяем размер файла (максимум 2MB)
+            if (file.size > 2 * 1024 * 1024) {
+                showNotification('Файл слишком большой. Максимальный размер: 2MB', 'error');
+                return;
+            }
+
             const reader = new FileReader();
             reader.onload = function(e) {
-                imageData = e.target.result;
-                imagePreview.src = imageData;
-                imagePreview.style.display = 'block';
-                counterImage.src = imageData;
-                counterImage.style.display = 'block';
+                // Создаем изображение для масштабирования
+                const img = new Image();
+                img.onload = function() {
+                    // Создаем canvas для сжатия изображения
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    // Максимальные размеры
+                    const maxWidth = 800;
+                    const maxHeight = 800;
+
+                    let width = img.width;
+                    let height = img.height;
+
+                    // Масштабируем если нужно
+                    if (width > maxWidth || height > maxHeight) {
+                        const ratio = Math.min(maxWidth / width, maxHeight / height);
+                        width = Math.floor(width * ratio);
+                        height = Math.floor(height * ratio);
+                    }
+
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+
+                    // Получаем сжатое изображение
+                    imageData = canvas.toDataURL('image/jpeg', 0.8);
+                    imagePreview.src = imageData;
+                    imagePreview.style.display = 'block';
+                    counterImage.src = imageData;
+                    counterImage.style.display = 'block';
+                    removeImageBtn.style.display = 'block';
+
+                    showNotification('Картинка загружена и оптимизирована');
+                };
+                img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
+    });
+
+    // Обработчик кнопки удаления картинки
+    removeImageBtn.addEventListener('click', function() {
+        imageData = null;
+        imagePreview.style.display = 'none';
+        counterImage.style.display = 'none';
+        removeImageBtn.style.display = 'none';
+        imageUpload.value = '';
+        showNotification('Картинка удалена');
     });
 
     function startCounter() {
@@ -370,6 +470,8 @@
         if (imageData) {
             counterImage.src = imageData;
             counterImage.style.display = 'block';
+        } else {
+            counterImage.style.display = 'none';
         }
 
         // Переключаемся в режим счётчика
