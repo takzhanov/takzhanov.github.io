@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yury Takzhanov | Lead Java Engineer</title>
+    <meta
+      name="description"
+      content="Lead Java Engineer portfolio: 15+ years of experience, selected impact and downloadable CV in EN/RU."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/css/portfolio.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="wrapper topbar-inner">
+        <div class="logo" data-i18n="header.logo"></div>
+        <nav class="menu">
+          <a href="#about" data-i18n="menu.about"></a>
+          <a href="#skills" data-i18n="menu.skills"></a>
+          <a href="#experience" data-i18n="menu.experience"></a>
+          <a href="#resume" data-i18n="menu.resume"></a>
+          <a href="#contact" data-i18n="menu.contact"></a>
+        </nav>
+        <div class="lang-switch" aria-label="Language switch">
+          <button type="button" data-lang-btn="ru">RU</button>
+          <button type="button" data-lang-btn="en">EN</button>
+        </div>
+      </div>
+    </header>
+
+    <main class="wrapper">
+      <section class="hero" data-reveal>
+        <div>
+          <span class="kicker" data-i18n="hero.kicker"></span>
+          <h1 data-i18n-html="hero.title"></h1>
+          <p class="lead" data-i18n="hero.lead"></p>
+          <div class="hero-actions">
+            <a class="btn btn-main" href="#contact" data-i18n="hero.ctaContact"></a>
+            <a class="btn btn-ghost" href="#resume" data-i18n="hero.ctaResume"></a>
+          </div>
+        </div>
+
+        <aside class="card hero-card">
+          <div class="mini-title" data-i18n="heroCard.title"></div>
+          <div class="facts">
+            <div class="fact">
+              <strong data-i18n="heroCard.f1v"></strong>
+              <span data-i18n="heroCard.f1t"></span>
+            </div>
+            <div class="fact">
+              <strong data-i18n="heroCard.f2v"></strong>
+              <span data-i18n="heroCard.f2t"></span>
+            </div>
+            <div class="fact">
+              <strong data-i18n="heroCard.f3v"></strong>
+              <span data-i18n="heroCard.f3t"></span>
+            </div>
+            <div class="fact">
+              <strong data-i18n="heroCard.f4v"></strong>
+              <span data-i18n="heroCard.f4t"></span>
+            </div>
+          </div>
+        </aside>
+      </section>
+
+      <section id="about" class="section grid-2" data-reveal>
+        <article class="card">
+          <h2 data-i18n="about.title"></h2>
+          <p data-i18n="about.body"></p>
+        </article>
+        <article class="card">
+          <h2 data-i18n="goals.title"></h2>
+          <p data-i18n="goals.body"></p>
+        </article>
+      </section>
+
+      <section id="skills" class="section card" data-reveal>
+        <h2 data-i18n="skills.title"></h2>
+        <div class="chips">
+          <span class="chip">Java 8/17</span>
+          <span class="chip">Spring Boot</span>
+          <span class="chip">Spring MVC / Data</span>
+          <span class="chip">REST / SOAP / gRPC</span>
+          <span class="chip">Oracle / PostgreSQL</span>
+          <span class="chip">Liquibase / Flyway</span>
+          <span class="chip">Maven / Git</span>
+          <span class="chip">Docker / Linux</span>
+          <span class="chip">Nginx</span>
+          <span class="chip">Angular 1.5</span>
+        </div>
+      </section>
+
+      <section id="experience" class="section grid-2" data-reveal>
+        <article class="card">
+          <h2 data-i18n="experience.title"></h2>
+          <div class="timeline">
+            <div class="timeline-item">
+              <span class="timeline-date">2016 - now</span>
+              <h3 data-i18n="experience.e1h"></h3>
+              <p data-i18n="experience.e1b"></p>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-date">2013 - 2016</span>
+              <h3 data-i18n="experience.e2h"></h3>
+              <p data-i18n="experience.e2b"></p>
+            </div>
+            <div class="timeline-item">
+              <span class="timeline-date">2010 - 2013</span>
+              <h3 data-i18n="experience.e3h"></h3>
+              <p data-i18n="experience.e3b"></p>
+            </div>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2 data-i18n="impact.title"></h2>
+          <ul class="impact-list">
+            <li data-i18n="impact.i1"></li>
+            <li data-i18n="impact.i2"></li>
+            <li data-i18n="impact.i3"></li>
+            <li data-i18n="impact.i4"></li>
+          </ul>
+        </article>
+      </section>
+
+      <section id="resume" class="section card" data-reveal>
+        <h2 data-i18n="resume.title"></h2>
+        <p data-i18n="resume.body"></p>
+        <div class="cv-actions">
+          <a class="btn btn-main" href="./cv/cv-en.pdf" target="_blank" rel="noopener" data-i18n="resume.en"></a>
+          <a class="btn btn-ghost" href="./cv/cv-ru.pdf" target="_blank" rel="noopener" data-i18n="resume.ru"></a>
+        </div>
+      </section>
+
+      <section id="contact" class="section card" data-reveal>
+        <h2 data-i18n="contact.title"></h2>
+        <ul class="contact-list">
+          <li>Email: <a href="mailto:takzhanov@gmail.com">takzhanov@gmail.com</a></li>
+          <li>LinkedIn: <a href="https://www.linkedin.com/in/takzhanov" target="_blank" rel="noopener">linkedin.com/in/takzhanov</a></li>
+          <li>Telegram: <a href="https://t.me/takzhanov" target="_blank" rel="noopener">@takzhanov</a></li>
+          <li>GitHub: <a href="https://github.com/takzhanov" target="_blank" rel="noopener">github.com/takzhanov</a></li>
+        </ul>
+      </section>
+    </main>
+
+    <footer class="wrapper">
+      <small>
+        <span data-i18n="footer.text"></span>
+        <span id="year"></span>
+      </small>
+    </footer>
+
+    <script src="./assets/js/portfolio.js"></script>
+  </body>
+</html>

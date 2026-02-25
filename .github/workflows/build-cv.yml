@@ -1,0 +1,36 @@
+name: Build CV PDFs
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "cv/**"
+      - "Makefile"
+      - ".github/workflows/build-cv.yml"
+
+jobs:
+  build-cv:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build CV (EN + RU)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: |
+            cv-en.tex
+            cv-ru.tex
+          working_directory: cv
+          post_compile: |
+            mkdir -p ../site/cv
+            cp cv-en.pdf ../site/cv/cv-en.pdf
+            cp cv-ru.pdf ../site/cv/cv-ru.pdf
+
+      - name: Upload CV artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cv-pdfs
+          path: |
+            site/cv/cv-en.pdf
+            site/cv/cv-ru.pdf

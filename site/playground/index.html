@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Yury Takzhanov | Playground</title>
+    <meta name="description" content="Static experiments and side pages." />
+    <style>
+      :root {
+        --bg: #f5f1e8;
+        --card: #fffaf3;
+        --ink: #1f2429;
+        --line: #d9cfbf;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: "Segoe UI", Tahoma, sans-serif;
+        background: var(--bg);
+        color: var(--ink);
+      }
+      .wrap { width: min(900px, calc(100% - 2rem)); margin: 2rem auto; }
+      .card {
+        border: 1px solid var(--line);
+        border-radius: 16px;
+        background: var(--card);
+        padding: 1rem;
+      }
+      h1 { margin: 0 0 0.8rem; }
+      ul { margin: 0; padding-left: 1.2rem; }
+      li + li { margin-top: 0.45rem; }
+      a { color: inherit; }
+      .hint { margin-top: 0.9rem; font-size: 0.94rem; opacity: 0.8; }
+    </style>
+  </head>
+  <body>
+    <main class="wrap">
+      <section class="card">
+        <h1>Playground</h1>
+        <ul>
+          <li><a href="../labs/snake/">Snake game</a></li>
+          <li><a href="../labs/debt/">Debt counter</a></li>
+        </ul>
+        <p class="hint">Add new pages under <code>site/labs/&lt;slug&gt;/index.html</code>.</p>
+      </section>
+    </main>
+  </body>
+</html>

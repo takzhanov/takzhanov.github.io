@@ -1,0 +1,64 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=1.65cm]{geometry}
+\usepackage[T1,T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage{enumitem}
+\usepackage[pageanchor=false]{hyperref}
+\usepackage{xcolor}
+\usepackage{tabularx}
+
+\hypersetup{
+  colorlinks=true,
+  urlcolor=blue
+}
+
+\providecommand{\cvlang}{english}
+\providecommand{\cvname}{Yury Takzhanov}
+\providecommand{\cvtitle}{Lead Java Engineer}
+\providecommand{\cvlocation}{Moscow, Russia}
+\providecommand{\cvavailability}{Open to remote and relocation}
+\providecommand{\cvemail}{takzhanov@gmail.com}
+\providecommand{\cvlinkedin}{https://www.linkedin.com/in/takzhanov}
+\providecommand{\cvlinkedinlabel}{linkedin.com/in/takzhanov}
+\providecommand{\cvtelegram}{https://t.me/takzhanov}
+\providecommand{\cvtelegramlabel}{t.me/takzhanov}
+\providecommand{\cvgithub}{https://github.com/takzhanov}
+\providecommand{\cvgithublabel}{github.com/takzhanov}
+\providecommand{\cvlastupdatelabel}{Last update}
+\providecommand{\cvcontentfile}{content/en.tex}
+
+\pagenumbering{gobble}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.35em}
+
+\newcommand{\cvsection}[1]{
+  \vspace{0.8em}
+  {\large\textbf{#1}}\\[-0.35em]
+  \rule{\linewidth}{0.5pt}
+}
+
+\newcommand{\cvrole}[4]{
+  \textbf{#1} \hfill \textit{#2}\\
+  #3 \hfill #4
+}
+
+\begin{document}
+
+\selectlanguage{\cvlang}
+
+{\LARGE \textbf{\cvname}}\\
+\textbf{\cvtitle}\\
+\cvlocation \;|\; \cvavailability\\
+\href{mailto:\cvemail}{\cvemail} \;|\;
+\href{\cvlinkedin}{\cvlinkedinlabel} \;|\;
+\href{\cvtelegram}{\cvtelegramlabel} \;|\;
+\href{\cvgithub}{\cvgithublabel}
+
+\input{\cvcontentfile}
+
+\vfill
+{\small \cvlastupdatelabel: \today}
+
+\end{document}
