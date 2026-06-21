@@ -1,7 +1,7 @@
 LATEXMK ?= latexmk
 CV_DIR := cv
 CV_BUILD_DIR := $(CV_DIR)/.build
-PAGES_DIR := site
+PAGES_DIR := me
 PAGES_CV_DIR := $(PAGES_DIR)/cv
 CV_PDFFILES := $(PAGES_CV_DIR)/cv-en.pdf $(PAGES_CV_DIR)/cv-ru.pdf
 TEXMFVAR := $(CURDIR)/.texmf-var

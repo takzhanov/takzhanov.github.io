@@ -20,8 +20,8 @@ make cv
 
 Output PDFs are generated for GitHub Pages in:
 
-- `site/cv/cv-en.pdf`
-- `site/cv/cv-ru.pdf`
+- `me/cv/cv-en.pdf`
+- `me/cv/cv-ru.pdf`
 
 Temporary build files are kept in `cv/.build/`.
 

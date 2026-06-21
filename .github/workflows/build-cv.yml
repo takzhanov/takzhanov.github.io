@@ -23,14 +23,14 @@ jobs:
             cv-ru.tex
           working_directory: cv
           post_compile: |
-            mkdir -p ../site/cv
-            cp cv-en.pdf ../site/cv/cv-en.pdf
-            cp cv-ru.pdf ../site/cv/cv-ru.pdf
+            mkdir -p ../me/cv
+            cp cv-en.pdf ../me/cv/cv-en.pdf
+            cp cv-ru.pdf ../me/cv/cv-ru.pdf
 
       - name: Upload CV artifacts
         uses: actions/upload-artifact@v4
         with:
           name: cv-pdfs
           path: |
-            site/cv/cv-en.pdf
-            site/cv/cv-ru.pdf
+            me/cv/cv-en.pdf
+            me/cv/cv-ru.pdf
