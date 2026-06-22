@@ -2,46 +2,42 @@ const translations = {
   ru: {
     title: "Yury Takzhanov | Senior Java Backend Engineer",
     description:
-      "Портфолио Yury Takzhanov: Senior Java Backend Engineer, 15+ лет в Java, релокация во Францию или Германию.",
-    header: { logo: "Yury Takzhanov" },
+      "Yury Takzhanov — Senior Java Backend Engineer с 15+ годами опыта, открыт к релокации в ЕС.",
+    header: {
+      logo: "Yury Takzhanov",
+      role: "Senior Java Backend Engineer",
+    },
     menu: {
-      about: "Обо мне",
-      skills: "Стек",
       experience: "Опыт",
+      skills: "Стек",
       resume: "Резюме",
       contact: "Контакты",
     },
     hero: {
-      kicker: "Релокация: Франция / Германия",
-      title: "Юрий Такжанов<br />Senior Java Backend Engineer",
+      kicker: "Senior engineer · Hands-on leadership",
+      name: "Юрий Такжанов",
+      role: "Senior Java Backend Engineer",
       lead:
-        "Senior backend-инженер с 15+ годами коммерческой разработки в телекоммуникациях, стриминговых сервисах и retail-системах. Проектирую и развиваю production-системы, интеграции и сложный legacy.",
-      ctaContact: "Связаться",
-      ctaResume: "Скачать CV",
+        "Backend-системы и поэтапная модернизация бизнес-критичного legacy без остановки продуктового развития.",
+      location: "Ереван, Армения",
+      availability: "Открыт к релокации в ЕС · приоритет Франция / Германия",
+      ctaResume: "Резюме и контакты",
     },
-    heroCard: {
-      title: "Быстрые факты",
-      f1v: "15+",
-      f1t: "лет в backend-разработке",
-      f2v: "Senior Engineer",
-      f2t: "hands-on роль с лидерским опытом",
-      f3v: "France / Germany",
-      f3t: "приоритетная релокация",
-      f4v: "Рабочий",
-      f4t: "английский язык",
+    metrics: {
+      experience: "лет в backend-разработке",
+      audience: "MAU продукта Wink",
+      load: "на макрорегион",
+      modernization: "поэтапная модернизация",
     },
-    about: {
-      title: "Обо мне",
+    profile: {
+      title: "Профиль",
       body:
-        "Специализируюсь на backend-разработке, модернизации legacy, производительности SQL, интеграциях и надежности production-систем. Беру ответственность за технические решения и их реализацию.",
-    },
-    goals: {
-      title: "Цель",
-      body:
-        "Ищу Senior Java Engineer роль во Франции или Германии с релокацией. Наиболее интересны продуктовые backend/platform команды, где ценятся инженерная культура и предсказуемая поставка.",
+        "Развиваю бизнес-критичные backend-системы без остановки продуктового развития. Зона ответственности охватывает бизнес-логику и интеграции, модернизацию runtime и данных, а также надежность production-систем. Принимаю технические решения и отвечаю за их реализацию в production.",
+      target:
+        "Ищу hands-on Senior Java Engineer роль с инженерным ростом. Интересны продуктовые backend/platform команды с сильной культурой, умеренной нагрузкой и релокацией в ЕС.",
     },
     skills: {
-      title: "Ключевой стек",
+      title: "Стек",
       backend: "Backend",
       systems: "Системы",
       data: "Данные",
@@ -50,76 +46,76 @@ const translations = {
     },
     experience: {
       title: "Опыт",
-      e1h: "Senior Java Developer / Team Lead, Рестрим Медиа (Wink)",
+      e1h: "Senior Java Developer / Team Lead",
+      e1company: "Рестрим Медиа · Wink",
+      e1date: "2016 — настоящее время",
       e1b:
-        "Backend подписок, покупок и интеграций Wink: legacy Java монолит, развернутый по макрорегионам, около 300 RPS и 2 ТБ данных на макрорегион.",
-      e2h: "Senior Java Developer, AT Consulting",
+        "Отвечал за backend подписок, покупок и интеграций Wink с аудиторией около 10 млн пользователей в месяц. Каждый макрорегион обрабатывал около 300 RPS и хранил около 2 ТБ данных.",
+      e2h: "Senior Java Developer · AT Consulting",
       e2b:
         "Retail/Telecom проекты: движок скидок, API-интеграции, расчет бизнес-показателей, системы знаний контакт-центра.",
-      e3h: "Опыт разработки (Icicall, Intellectika, AuditNT)",
+      e3h: "Опыт разработки · Icicall / Intellectika / AuditNT",
       e3b:
         "Ранний этап карьеры: enterprise-разработка, поддержка и развитие корпоративных систем.",
     },
     impact: {
-      title: "Selected Impact",
-      i1: "Развивал способы покупки и подписки, интеграции и выделил B2B-функциональность в отдельный подпроект.",
+      title: "Ключевой вклад",
+      i1: "Реализовал новые способы покупки и подписки, развил интеграционные потоки и выделил B2B-функциональность в отдельный подпроект.",
       i2: "Спроектировал и создал сервисы авторизации и API gateway для основного продукта.",
-      i3: "Вел модернизацию платформы с Java 6 до Java 21 и поэтапное внедрение Spring в legacy-код.",
-      i4: "Повысил надежность релизов и ускорил разбор инцидентов через более прозрачные логи и усиление review.",
-      i5: "Определял технические решения для команды из пяти инженеров; провел около 20 собеседований и нанял 5 инженеров.",
+      i3: "Вел поэтапную модернизацию с Java 6 до Java 21 и Spring Boot 3.5 без остановки продуктового развития.",
+      i4: "Заменил Oracle-скрипты управляемыми Liquibase-миграциями; оптимизировал SQL и переработал DAO-слой.",
+      i5: "Развил NSQ event flows с типизированными сообщениями, дедупликацией и persisted outbox.",
+      i6: "Добавил Actuator, Prometheus/Micrometer, readiness, трассировку и тесты с Oracle Testcontainers.",
+      i7: "Определял технические решения для команды из пяти инженеров, провел около 20 собеседований и нанял пять инженеров.",
     },
     resume: {
-      title: "Резюме (PDF)",
-      body: "Доступны две версии CV: английская и русская.",
-      en: "Скачать CV EN",
-      ru: "Скачать CV RU",
+      title: "Резюме",
+      body: "Одностраничное CV доступно на английском и русском языках.",
+      en: "English CV",
+      ru: "Русское CV",
+      preview: "Открыть English CV",
     },
-    contact: { title: "Контакты" },
-    footer: { text: "Личная страница разработчика, " },
+    footer: { text: "Yury Takzhanov · Senior Java Backend Engineer · " },
   },
   en: {
     title: "Yury Takzhanov | Senior Java Backend Engineer",
     description:
-      "Senior Java Backend Engineer portfolio: 15+ years in Java, selected impact and relocation focus on France or Germany.",
-    header: { logo: "Yury Takzhanov" },
+      "Yury Takzhanov — Senior Java Backend Engineer with 15+ years of experience, open to EU relocation.",
+    header: {
+      logo: "Yury Takzhanov",
+      role: "Senior Java Backend Engineer",
+    },
     menu: {
-      about: "About",
-      skills: "Skills",
       experience: "Experience",
+      skills: "Skills",
       resume: "Resume",
       contact: "Contact",
     },
     hero: {
-      kicker: "Open to France / Germany relocation",
-      title: "Yury Takzhanov<br />Senior Java Backend Engineer",
+      kicker: "Senior engineer · Hands-on leadership",
+      name: "Yury Takzhanov",
+      role: "Senior Java Backend Engineer",
       lead:
-        "Senior backend engineer with 15+ years of commercial experience in telecom, streaming media, and retail systems. I design and evolve production systems, integrations, and complex legacy platforms.",
-      ctaContact: "Contact",
-      ctaResume: "Download CV",
+        "Backend systems and incremental modernization of business-critical legacy without stopping product delivery.",
+      location: "Yerevan, Armenia",
+      availability: "Open to EU relocation · priority France / Germany",
+      ctaResume: "Resume and contact",
     },
-    heroCard: {
-      title: "At a Glance",
-      f1v: "15+",
-      f1t: "years in backend engineering",
-      f2v: "Senior Engineer",
-      f2t: "hands-on role with leadership exposure",
-      f3v: "France / Germany",
-      f3t: "priority relocation target",
-      f4v: "Working",
-      f4t: "English proficiency",
+    metrics: {
+      experience: "years in backend engineering",
+      audience: "Wink monthly users",
+      load: "per macro-region",
+      modernization: "incremental modernization",
     },
-    about: {
-      title: "About",
+    profile: {
+      title: "Profile",
       body:
-        "I specialize in backend engineering, legacy modernization, SQL performance, integrations, and production reliability. I own technical decisions and carry them through implementation.",
-    },
-    goals: {
-      title: "Career Goal",
-      body:
-        "I am targeting a Senior Java Engineer role in France or Germany with relocation. I am most effective in product backend/platform teams where engineering culture and delivery predictability matter.",
+        "I evolve business-critical backend systems while continuing product delivery. My work spans business logic and integrations, runtime and data modernization, and production reliability. I own technical decisions from design through production.",
+      target:
+        "Targeting a hands-on Senior Java Engineer role with a technical growth path. Interested in product backend or platform teams with a strong engineering culture and relocation opportunities within the EU.",
     },
     skills: {
-      title: "Core Stack",
+      title: "Skills",
       backend: "Backend",
       systems: "Systems",
       data: "Data",
@@ -128,32 +124,36 @@ const translations = {
     },
     experience: {
       title: "Experience",
-      e1h: "Senior Java Developer / Team Lead, Restream Media (Wink)",
+      e1h: "Senior Java Developer / Team Lead",
+      e1company: "Restream Media · Wink",
+      e1date: "2016 — Present",
       e1b:
-        "Owned Wink subscriptions, purchases, and integrations backend: a legacy Java monolith deployed across macro-regions, with around 300 RPS and 2 TB of data per macro-region.",
-      e2h: "Senior Java Developer, AT Consulting",
+        "At Wink, I owned backend areas for subscriptions, purchases, and integrations, serving around 10M monthly users. Each macro-regional deployment handled around 300 RPS and stored around 2 TB of data.",
+      e2h: "Senior Java Developer · AT Consulting",
       e2b:
         "Retail/Telecom systems: discount engine, API integrations, business KPI calculations, and knowledge management platforms.",
-      e3h: "Developer Experience (Icicall, Intellectika, AuditNT)",
+      e3h: "Developer Experience · Icicall / Intellectika / AuditNT",
       e3b:
         "Early-career enterprise development: support and evolution of internal business systems.",
     },
     impact: {
       title: "Selected Impact",
-      i1: "Delivered new purchase and subscription methods, evolved integrations, and separated B2B functionality into a dedicated subproject.",
-      i2: "Designed and built authorization and API gateway services supporting the core product.",
-      i3: "Drove platform modernization from Java 6 to Java 21 and introduced Spring incrementally into the legacy codebase.",
-      i4: "Improved release reliability and accelerated incident investigation through clearer logging and stronger reviews.",
-      i5: "Provided technical direction for a five-engineer team; interviewed around 20 candidates and hired 5 engineers.",
+      i1: "Delivered new purchase and subscription methods, evolved integration flows, and separated B2B functionality into a dedicated subproject.",
+      i2: "Designed and built authorization and API gateway services for the core product.",
+      i3: "Drove incremental modernization from Java 6 to Java 21 and Spring Boot 3.5 while continuing product delivery.",
+      i4: "Replaced ad hoc Oracle scripts with managed Liquibase migrations; optimized SQL and refactored the DAO layer.",
+      i5: "Evolved NSQ event flows with typed messages, deduplication, and a persisted outbox.",
+      i6: "Added Actuator, Prometheus/Micrometer, readiness checks, request tracing, and Oracle Testcontainers tests.",
+      i7: "Provided technical direction for a five-engineer team, interviewed around 20 candidates, and hired five engineers.",
     },
     resume: {
-      title: "Resume (PDF)",
-      body: "Two CV versions are available: English and Russian.",
-      en: "Download CV EN",
-      ru: "Download CV RU",
+      title: "Resume",
+      body: "A focused one-page CV is available in English and Russian.",
+      en: "English CV",
+      ru: "Russian CV",
+      preview: "Open English CV",
     },
-    contact: { title: "Contact" },
-    footer: { text: "Personal engineer profile, " },
+    footer: { text: "Yury Takzhanov · Senior Java Backend Engineer · " },
   },
 };
 
@@ -168,6 +168,32 @@ const allowedLangs = ["ru", "en"];
 
 function byPath(obj, path) {
   return path.split(".").reduce((acc, part) => (acc ? acc[part] : undefined), obj);
+}
+
+function getSavedLang() {
+  try {
+    return localStorage.getItem("portfolio-lang");
+  } catch {
+    return null;
+  }
+}
+
+function saveLang(lang) {
+  try {
+    localStorage.setItem("portfolio-lang", lang);
+  } catch {
+    // Storage can be unavailable for local file URLs.
+  }
+}
+
+function updateUrlLang(lang) {
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.set("lang", lang);
+    window.history.replaceState({}, "", url.toString());
+  } catch {
+    // Some browsers do not allow history changes for local file URLs.
+  }
 }
 
 function applyLang(lang) {
@@ -199,15 +225,12 @@ function applyLang(lang) {
     button.classList.toggle("active", button.getAttribute("data-lang-btn") === lang);
   });
 
-  localStorage.setItem("portfolio-lang", lang);
-
-  const url = new URL(window.location.href);
-  url.searchParams.set("lang", lang);
-  window.history.replaceState({}, "", url.toString());
+  saveLang(lang);
+  updateUrlLang(lang);
 }
 
 const urlLang = new URL(window.location.href).searchParams.get("lang");
-const savedLang = localStorage.getItem("portfolio-lang");
+const savedLang = getSavedLang();
 const initialLang = allowedLangs.includes(urlLang)
   ? urlLang
   : allowedLangs.includes(savedLang)
@@ -240,17 +263,3 @@ document.addEventListener("keydown", (event) => {
 });
 
 document.getElementById("year").textContent = new Date().getFullYear();
-
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-        observer.unobserve(entry.target);
-      }
-    });
-  },
-  { threshold: 0.2 }
-);
-
-document.querySelectorAll("[data-reveal]").forEach((node) => observer.observe(node));

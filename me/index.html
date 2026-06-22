@@ -11,182 +11,123 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Manrope:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&amp;family=Manrope:wght@400;500;700;800&amp;family=JetBrains+Mono:wght@400;600&amp;display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="./assets/css/portfolio.css" />
   </head>
   <body>
-    <header class="topbar">
-      <div class="wrapper topbar-inner">
-        <div class="logo" data-i18n="header.logo"></div>
-        <nav class="menu">
-          <a href="#about" data-i18n="menu.about"></a>
-          <a href="#skills" data-i18n="menu.skills"></a>
-          <a href="#experience" data-i18n="menu.experience"></a>
-          <a href="#resume" data-i18n="menu.resume"></a>
-          <a href="#contact" data-i18n="menu.contact"></a>
-        </nav>
-        <div class="lang-switch" aria-label="Language switch">
-          <button type="button" data-lang-btn="en">EN</button>
-          <button type="button" data-lang-btn="ru">RU</button>
-        </div>
-      </div>
-    </header>
+    <div class="page-shell" id="top">
+      <aside class="profile-rail">
+        <div class="rail-inner">
+          <div class="rail-toolbar">
+            <p data-i18n="hero.kicker">Senior engineer · Hands-on leadership</p>
+            <div class="lang-switch" aria-label="Language switch">
+              <button type="button" data-lang-btn="en">EN</button>
+              <button type="button" data-lang-btn="ru">RU</button>
+            </div>
+          </div>
 
-    <main class="wrapper">
-      <section class="hero" data-reveal>
-        <div>
-          <span class="kicker" data-i18n="hero.kicker"></span>
-          <h1 data-i18n-html="hero.title"></h1>
-          <p class="lead" data-i18n="hero.lead"></p>
-          <div class="hero-actions">
-            <a class="btn btn-main" href="#contact" data-i18n="hero.ctaContact"></a>
-            <a class="btn btn-ghost" href="#resume" data-i18n="hero.ctaResume"></a>
+          <h1 data-i18n="hero.name">Yury Takzhanov</h1>
+          <p class="hero-role" data-i18n="hero.role">Senior Java Backend Engineer</p>
+          <p class="rail-summary" data-i18n="hero.lead">Backend systems and incremental modernization of business-critical legacy without stopping product delivery.</p>
+
+          <div class="rail-meta">
+            <span data-i18n="hero.location">Yerevan, Armenia</span>
+            <span data-i18n="hero.availability">Open to EU relocation · priority France / Germany</span>
+          </div>
+
+          <dl class="evidence-grid" aria-label="Engineering scale">
+            <div><dt>15+</dt><dd data-i18n="metrics.experience">years in backend engineering</dd></div>
+            <div><dt>10M</dt><dd data-i18n="metrics.audience">Wink monthly users</dd></div>
+            <div><dt>300 RPS</dt><dd data-i18n="metrics.load">per macro-region</dd></div>
+            <div><dt>Java 6 → 21</dt><dd data-i18n="metrics.modernization">incremental modernization</dd></div>
+          </dl>
+
+          <nav class="rail-nav" aria-label="Page navigation">
+            <a href="#experience" data-i18n="menu.experience">Experience</a>
+            <a href="#skills" data-i18n="menu.skills">Skills</a>
+          </nav>
+
+          <section id="resume" class="rail-resume">
+            <h2 data-i18n="resume.title">Resume</h2>
+            <div class="resume-compact">
+              <a class="cv-preview" href="./cv/cv-en.pdf" target="_blank" rel="noopener">
+                <img src="./assets/img/cv-en-preview.png" alt="English CV first page preview" />
+              </a>
+              <div class="cv-links">
+                <a href="./cv/cv-en.pdf" target="_blank" rel="noopener" data-i18n="resume.en">English CV</a>
+                <a href="./cv/cv-ru.pdf" target="_blank" rel="noopener" data-i18n="resume.ru">Russian CV</a>
+              </div>
+            </div>
+          </section>
+
+          <div id="contact" class="contact-links">
+            <a href="mailto:takzhanov@gmail.com">takzhanov@gmail.com</a>
+            <a href="https://www.linkedin.com/in/takzhanov" target="_blank" rel="noopener">LinkedIn</a>
+            <a href="https://t.me/takzhanov" target="_blank" rel="noopener">Telegram</a>
           </div>
         </div>
+      </aside>
 
-        <aside class="card hero-card">
-          <div class="mini-title" data-i18n="heroCard.title"></div>
-          <div class="facts">
-            <div class="fact">
-              <strong data-i18n="heroCard.f1v"></strong>
-              <span data-i18n="heroCard.f1t"></span>
-            </div>
-            <div class="fact">
-              <strong data-i18n="heroCard.f2v"></strong>
-              <span data-i18n="heroCard.f2t"></span>
-            </div>
-            <div class="fact">
-              <strong data-i18n="heroCard.f3v"></strong>
-              <span data-i18n="heroCard.f3t"></span>
-            </div>
-            <div class="fact">
-              <strong data-i18n="heroCard.f4v"></strong>
-              <span data-i18n="heroCard.f4t"></span>
-            </div>
+      <main class="main-content">
+        <section id="about" class="dense-section profile-section">
+          <div class="section-title"><span>01</span><h2 data-i18n="profile.title">Profile</h2></div>
+          <p data-i18n="profile.body">I evolve business-critical backend systems while continuing product delivery. My work spans business logic and integrations, runtime and data modernization, and production reliability. I own technical decisions from design through production.</p>
+          <p class="profile-target" data-i18n="profile.target">Targeting a hands-on Senior Java Engineer role with a technical growth path. Interested in product backend or platform teams with a strong engineering culture and relocation opportunities within the EU.</p>
+        </section>
+
+        <section id="experience" class="dense-section">
+          <div class="section-title"><span>02</span><h2 data-i18n="experience.title">Experience</h2></div>
+          <article class="current-role">
+            <header class="role-header">
+              <div>
+                <h3 data-i18n="experience.e1h">Senior Java Developer / Team Lead</h3>
+                <p class="company" data-i18n="experience.e1company">Restream Media · Wink</p>
+              </div>
+              <p class="role-date" data-i18n="experience.e1date">2016 — Present</p>
+            </header>
+            <p class="role-context" data-i18n="experience.e1b">At Wink, I owned backend areas for subscriptions, purchases, and integrations, serving around 10M monthly users. Each macro-regional deployment handled around 300 RPS and stored around 2 TB of data.</p>
+            <h4 data-i18n="impact.title">Selected impact</h4>
+            <ul class="impact-list">
+              <li data-i18n="impact.i1">Delivered new purchase and subscription methods, evolved integration flows, and separated B2B functionality into a dedicated subproject.</li>
+              <li data-i18n="impact.i2">Designed and built authorization and API gateway services for the core product.</li>
+              <li data-i18n="impact.i3">Drove incremental modernization from Java 6 to Java 21 and Spring Boot 3.5 while continuing product delivery.</li>
+              <li data-i18n="impact.i4">Replaced ad hoc Oracle scripts with managed Liquibase migrations; optimized SQL and refactored the DAO layer.</li>
+              <li data-i18n="impact.i5">Evolved NSQ event flows with typed messages, deduplication, and a persisted outbox.</li>
+              <li data-i18n="impact.i6">Added Actuator, Prometheus/Micrometer, readiness checks, request tracing, and Oracle Testcontainers tests.</li>
+              <li data-i18n="impact.i7">Provided technical direction for a five-engineer team, interviewed around 20 candidates, and hired five engineers.</li>
+            </ul>
+          </article>
+
+          <div class="earlier-roles">
+            <article class="experience-row">
+              <div><h3 data-i18n="experience.e2h">Senior Java Developer · AT Consulting</h3><p data-i18n="experience.e2b">Retail/Telecom systems: discount engine, API integrations, business KPI calculations, and knowledge management platforms.</p></div>
+              <p class="role-date">2013–2016</p>
+            </article>
+            <article class="experience-row">
+              <div><h3 data-i18n="experience.e3h">Developer Experience · Icicall / Intellectika / AuditNT</h3><p data-i18n="experience.e3b">Early-career enterprise development: support and evolution of internal business systems.</p></div>
+              <p class="role-date">2008–2013</p>
+            </article>
           </div>
-        </aside>
-      </section>
+        </section>
 
-      <section id="about" class="section grid-2" data-reveal>
-        <article class="card">
-          <h2 data-i18n="about.title"></h2>
-          <p data-i18n="about.body"></p>
-        </article>
-        <article class="card">
-          <h2 data-i18n="goals.title"></h2>
-          <p data-i18n="goals.body"></p>
-        </article>
-      </section>
-
-      <section id="skills" class="section card" data-reveal>
-        <h2 data-i18n="skills.title"></h2>
-        <div class="skill-groups">
-          <div class="skill-group">
-            <h3 data-i18n="skills.backend"></h3>
-            <div class="chips">
-              <span class="chip">Java 8–21</span>
-              <span class="chip">Spring</span>
-              <span class="chip">REST / SOAP / gRPC</span>
-            </div>
+        <section id="skills" class="dense-section">
+          <div class="section-title"><span>03</span><h2 data-i18n="skills.title">Skills</h2></div>
+          <div class="skill-list">
+            <div class="skill-row"><h3 data-i18n="skills.backend">Backend</h3><p>Java 8–21 · Spring Boot · REST · SOAP · gRPC</p></div>
+            <div class="skill-row"><h3 data-i18n="skills.systems">Systems</h3><p>Distributed deployments · Integrations · Authorization · API gateways · Legacy modernization</p></div>
+            <div class="skill-row"><h3 data-i18n="skills.data">Data</h3><p>PostgreSQL · Oracle · SQL tuning · JPA/Hibernate · Liquibase</p></div>
+            <div class="skill-row"><h3 data-i18n="skills.delivery">Delivery</h3><p>GitLab CI/CD · Docker · Docker Swarm · Linux · Nginx</p></div>
+            <div class="skill-row"><h3 data-i18n="skills.observability">Observability</h3><p>Prometheus · Grafana · Micrometer</p></div>
           </div>
-          <div class="skill-group">
-            <h3 data-i18n="skills.systems"></h3>
-            <div class="chips">
-              <span class="chip">Distributed deployments</span>
-              <span class="chip">Integrations</span>
-              <span class="chip">Authorization / API gateway</span>
-              <span class="chip">Legacy modernization</span>
-            </div>
-          </div>
-          <div class="skill-group">
-            <h3 data-i18n="skills.data"></h3>
-            <div class="chips">
-              <span class="chip">Oracle / PostgreSQL</span>
-              <span class="chip">SQL tuning</span>
-              <span class="chip">JPA / Hibernate</span>
-              <span class="chip">Liquibase</span>
-            </div>
-          </div>
-          <div class="skill-group">
-            <h3 data-i18n="skills.delivery"></h3>
-            <div class="chips">
-              <span class="chip">GitLab CI/CD</span>
-              <span class="chip">Docker / Docker Swarm</span>
-              <span class="chip">Linux / Nginx</span>
-            </div>
-          </div>
-          <div class="skill-group">
-            <h3 data-i18n="skills.observability"></h3>
-            <div class="chips">
-              <span class="chip">Grafana</span>
-              <span class="chip">Prometheus</span>
-              <span class="chip">Micrometer</span>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      <section id="experience" class="section grid-2" data-reveal>
-        <article class="card">
-          <h2 data-i18n="experience.title"></h2>
-          <div class="timeline">
-            <div class="timeline-item">
-              <span class="timeline-date">2016 - now</span>
-              <h3 data-i18n="experience.e1h"></h3>
-              <p data-i18n="experience.e1b"></p>
-            </div>
-            <div class="timeline-item">
-              <span class="timeline-date">2013 - 2016</span>
-              <h3 data-i18n="experience.e2h"></h3>
-              <p data-i18n="experience.e2b"></p>
-            </div>
-            <div class="timeline-item">
-              <span class="timeline-date">2008 - 2013</span>
-              <h3 data-i18n="experience.e3h"></h3>
-              <p data-i18n="experience.e3b"></p>
-            </div>
-          </div>
-        </article>
-
-        <article class="card">
-          <h2 data-i18n="impact.title"></h2>
-          <ul class="impact-list">
-            <li data-i18n="impact.i1"></li>
-            <li data-i18n="impact.i2"></li>
-            <li data-i18n="impact.i3"></li>
-            <li data-i18n="impact.i4"></li>
-            <li data-i18n="impact.i5"></li>
-          </ul>
-        </article>
-      </section>
-
-      <section id="resume" class="section card" data-reveal>
-        <h2 data-i18n="resume.title"></h2>
-        <p data-i18n="resume.body"></p>
-        <div class="cv-actions">
-          <a class="btn btn-main" href="./cv/cv-en.pdf" target="_blank" rel="noopener" data-i18n="resume.en"></a>
-          <a class="btn btn-ghost" href="./cv/cv-ru.pdf" target="_blank" rel="noopener" data-i18n="resume.ru"></a>
-        </div>
-      </section>
-
-      <section id="contact" class="section card" data-reveal>
-        <h2 data-i18n="contact.title"></h2>
-        <ul class="contact-list">
-          <li>Email: <a href="mailto:takzhanov@gmail.com">takzhanov@gmail.com</a></li>
-          <li>LinkedIn: <a href="https://www.linkedin.com/in/takzhanov" target="_blank" rel="noopener">linkedin.com/in/takzhanov</a></li>
-          <li>Telegram: <a href="https://t.me/takzhanov" target="_blank" rel="noopener">@takzhanov</a></li>
-        </ul>
-      </section>
-    </main>
-
-    <footer class="wrapper">
-      <small>
-        <span data-i18n="footer.text"></span>
-        <span id="year"></span>
-      </small>
-    </footer>
+        <footer class="site-footer">
+          <span data-i18n="footer.text">Yury Takzhanov · Senior Java Backend Engineer · </span><span id="year"></span>
+        </footer>
+      </main>
+    </div>
 
     <script src="./assets/js/portfolio.js"></script>
   </body>
