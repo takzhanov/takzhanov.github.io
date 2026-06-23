@@ -9,8 +9,8 @@ github-page/
 ├─ me/                         # Основная страница по адресу /me/
 │  ├─ index.html               # Главная страница сайта
 │  ├─ cv/
-│  │  ├─ cv-en.pdf             # Готовое CV EN (публикуется)
-│  │  └─ cv-ru.pdf             # Готовое CV RU (публикуется)
+│  │  ├─ takzhanov-cv-en.pdf   # Готовое CV EN (публикуется)
+│  │  └─ takzhanov-cv-ru.pdf   # Готовое CV RU (публикуется)
 │  └─ playground/index.html    # Редирект со старого адреса на /labs/
 ├─ labs/
 │  ├─ index.html               # Скрытый от основной страницы каталог поделок
@@ -68,7 +68,7 @@ make cv
 Открыть:
 - `http://localhost:8787/github-page/` (редирект на `/github-page/me/`)
 - `http://localhost:8787/github-page/me/`
-- `http://localhost:8787/github-page/me/cv/cv-en.pdf`
+- `http://localhost:8787/github-page/me/cv/takzhanov-cv-en.pdf`
 - `http://localhost:8787/github-page/labs/`
 
 Где:

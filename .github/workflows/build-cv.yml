@@ -24,13 +24,13 @@ jobs:
           working_directory: cv
           post_compile: |
             mkdir -p ../me/cv
-            cp cv-en.pdf ../me/cv/cv-en.pdf
-            cp cv-ru.pdf ../me/cv/cv-ru.pdf
+            cp cv-en.pdf ../me/cv/takzhanov-cv-en.pdf
+            cp cv-ru.pdf ../me/cv/takzhanov-cv-ru.pdf
 
       - name: Upload CV artifacts
         uses: actions/upload-artifact@v4
         with:
           name: cv-pdfs
           path: |
-            me/cv/cv-en.pdf
-            me/cv/cv-ru.pdf
+            me/cv/takzhanov-cv-en.pdf
+            me/cv/takzhanov-cv-ru.pdf
