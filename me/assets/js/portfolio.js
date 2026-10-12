@@ -18,7 +18,7 @@ const translations = {
       name: "Юрий Такжанов",
       role: "Senior Java Backend Engineer",
       lead:
-        "Backend-системы и поэтапная модернизация бизнес-критичного legacy без остановки продуктового развития.",
+        "Backend-сервисы на Java, интеграции и поэтапная модернизация существующих систем.",
       location: "Ереван, Армения",
       availability: "Открыт к релокации в ЕС · приоритет Франция / Германия",
       ctaResume: "Резюме и контакты",
@@ -32,7 +32,7 @@ const translations = {
     profile: {
       title: "Профиль",
       body:
-        "Развиваю бизнес-критичные backend-системы без остановки продуктового развития. Зона ответственности охватывает бизнес-логику и интеграции, модернизацию runtime и данных, а также надежность production-систем. Принимаю технические решения и отвечаю за их реализацию в production.",
+        "Senior Java Backend Engineer с опытом более 15 лет в телекоммуникациях, стриминговых сервисах и retail. Создаю сервисы на Java и Spring Boot, интегрирую системы и повышаю их надежность в production. Модернизирую существующие системы, продолжая выпускать новые функции.",
       target:
         "Ищу hands-on Senior Java Engineer роль с инженерным ростом. Интересны продуктовые backend/platform команды с сильной культурой, умеренной нагрузкой и релокацией в ЕС.",
     },
@@ -40,9 +40,12 @@ const translations = {
       title: "Стек",
       backend: "Backend",
       systems: "Системы",
+      messaging: "Сообщения",
+      messagingBody: "NSQ · Apache Kafka",
       data: "Данные",
       delivery: "Поставка",
-      observability: "Наблюдаемость",
+      testing: "Тестирование",
+      observability: "Мониторинг",
     },
     experience: {
       title: "Опыт",
@@ -50,23 +53,23 @@ const translations = {
       e1company: "Рестрим Медиа · Wink",
       e1date: "2016 — настоящее время",
       e1b:
-        "Отвечал за backend подписок, покупок и интеграций Wink с аудиторией около 10 млн пользователей в месяц. Каждый макрорегион обрабатывал около 300 RPS и хранил около 2 ТБ данных.",
+        "Отвечал за сервисы подписок, покупок и интеграций Wink с аудиторией около 10 млн пользователей в месяц. Каждое региональное развертывание обрабатывало около 300 запросов в секунду и хранило около 2 ТБ данных.",
       e2h: "Senior Java Developer · AT Consulting",
       e2b:
         "Retail/Telecom проекты: движок скидок, API-интеграции, расчет бизнес-показателей, системы знаний контакт-центра.",
-      e3h: "Опыт разработки · Icicall / Intellectika / AuditNT",
+      e3h: "Разработчик ПО · Icicall / Intellectika / AuditNT",
       e3b:
-        "Ранний этап карьеры: enterprise-разработка, поддержка и развитие корпоративных систем.",
+        "Разработка и поддержка внутренних бизнес-систем.",
     },
     impact: {
       title: "Ключевой вклад",
       i1: "Реализовал новые способы покупки и подписки, развил интеграционные потоки и выделил B2B-функциональность в отдельный подпроект.",
       i2: "Спроектировал и создал сервисы авторизации и API gateway для основного продукта.",
       i3: "Вел поэтапную модернизацию с Java 6 до Java 21 и Spring Boot 3.5 без остановки продуктового развития.",
-      i4: "Заменил Oracle-скрипты управляемыми Liquibase-миграциями; оптимизировал SQL и переработал DAO-слой.",
-      i5: "Развил NSQ event flows с типизированными сообщениями, дедупликацией и persisted outbox.",
+      i4: "Заменил ручные Oracle-скрипты версионируемыми Liquibase-миграциями с проверками и поддержкой rollback. Оптимизировал SQL и переработал слой доступа к данным.",
+      i5: "Улучшил обмен сообщениями через NSQ: типизированные сообщения, дедупликация и persistent outbox.",
       i6: "Добавил Actuator, Prometheus/Micrometer, readiness, трассировку и тесты с Oracle Testcontainers.",
-      i7: "Определял технические решения для команды из пяти инженеров, провел около 20 собеседований и нанял пять инженеров.",
+      i7: "Вел техническую работу команды из пяти инженеров. Провел около 20 собеседований и нанял пять инженеров.",
     },
     resume: {
       title: "Резюме",
@@ -96,7 +99,7 @@ const translations = {
       name: "Yury Takzhanov",
       role: "Senior Java Backend Engineer",
       lead:
-        "Backend systems and incremental modernization of business-critical legacy without stopping product delivery.",
+        "Java backend services, system integrations and step-by-step upgrades of existing systems.",
       location: "Yerevan, Armenia",
       availability: "Open to EU relocation · priority France / Germany",
       ctaResume: "Resume and contact",
@@ -110,17 +113,20 @@ const translations = {
     profile: {
       title: "Profile",
       body:
-        "I evolve business-critical backend systems while continuing product delivery. My work spans business logic and integrations, runtime and data modernization, and production reliability. I own technical decisions from design through production.",
+        "Senior Java Backend Engineer with 15+ years of experience in telecom, streaming media and retail. I build Java and Spring Boot services, integrate systems and improve production reliability. I modernize existing systems while delivering new features.",
       target:
-        "Targeting a hands-on Senior Java Engineer role with a technical growth path. Interested in product backend or platform teams with a strong engineering culture and relocation opportunities within the EU.",
+        "Looking for a Senior Java Engineer role where I can write code and grow as an engineer. Interested in backend or platform teams that value code quality, testing and reliable systems. Open to relocation within the EU.",
     },
     skills: {
       title: "Skills",
       backend: "Backend",
       systems: "Systems",
+      messaging: "Messaging",
+      messagingBody: "NSQ · Apache Kafka",
       data: "Data",
       delivery: "Delivery",
-      observability: "Observability",
+      testing: "Testing",
+      observability: "Monitoring",
     },
     experience: {
       title: "Experience",
@@ -128,23 +134,23 @@ const translations = {
       e1company: "Restream Media · Wink",
       e1date: "2016 — Present",
       e1b:
-        "At Wink, I owned backend areas for subscriptions, purchases, and integrations, serving around 10M monthly users. Each macro-regional deployment handled around 300 RPS and stored around 2 TB of data.",
+        "Responsible for subscription, purchase and integration services for Wink, a streaming platform with about 10 million monthly users. Each regional deployment handled about 300 requests per second and stored about 2 TB of data.",
       e2h: "Senior Java Developer · AT Consulting",
       e2b:
-        "Retail/Telecom systems: discount engine, API integrations, business KPI calculations, and knowledge management platforms.",
-      e3h: "Developer Experience · Icicall / Intellectika / AuditNT",
+        "Built discount calculation services and APIs for retail products, business KPI services for telecom systems and contact center knowledge management features.",
+      e3h: "Software Developer · Icicall / Intellectika / AuditNT",
       e3b:
-        "Early-career enterprise development: support and evolution of internal business systems.",
+        "Developed and supported internal business systems.",
     },
     impact: {
-      title: "Selected Impact",
-      i1: "Delivered new purchase and subscription methods, evolved integration flows, and separated B2B functionality into a dedicated subproject.",
+      title: "Selected work",
+      i1: "Added new purchase and subscription options and improved integrations. Moved B2B features into a separate project.",
       i2: "Designed and built authorization and API gateway services for the core product.",
-      i3: "Drove incremental modernization from Java 6 to Java 21 and Spring Boot 3.5 while continuing product delivery.",
-      i4: "Replaced ad hoc Oracle scripts with managed Liquibase migrations; optimized SQL and refactored the DAO layer.",
-      i5: "Evolved NSQ event flows with typed messages, deduplication, and a persisted outbox.",
-      i6: "Added Actuator, Prometheus/Micrometer, readiness checks, request tracing, and Oracle Testcontainers tests.",
-      i7: "Provided technical direction for a five-engineer team, interviewed around 20 candidates, and hired five engineers.",
+      i3: "Upgraded backend systems from Java 6 to Java 21 and Spring Boot 3.5 in stages, while continuing to deliver product features.",
+      i4: "Replaced manual Oracle database scripts with versioned Liquibase migrations, including validation and rollback support. Optimized SQL queries and improved the data access layer.",
+      i5: "Improved NSQ messaging with typed messages, deduplication and a persistent outbox.",
+      i6: "Added Spring Boot Actuator, Prometheus and Micrometer metrics, readiness checks and request tracing. Added integration tests using Oracle Testcontainers.",
+      i7: "Led technical work for a team of five engineers. Interviewed about 20 candidates and hired five engineers.",
     },
     resume: {
       title: "Resume",

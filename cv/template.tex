@@ -1,13 +1,25 @@
 \documentclass[10pt,a4paper]{article}
 
 \usepackage[margin=1.4cm]{geometry}
-\usepackage[T1,T2A]{fontenc}
-\usepackage[utf8]{inputenc}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1,T2A]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \input{glyphtounicode}
+  \pdfgentounicode=1
+\else
+  \usepackage{fontspec}
+  \setmainfont{DejaVu Serif}
+\fi
 \usepackage[english,russian]{babel}
 \usepackage{enumitem}
 \usepackage[pageanchor=false]{hyperref}
 \usepackage{xcolor}
 \usepackage{tabularx}
+
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\emergencystretch=3em
 
 \hypersetup{
   colorlinks=true,
@@ -47,6 +59,12 @@
 \begin{document}
 
 \selectlanguage{\cvlang}
+\raggedright
+
+\hypersetup{
+  pdftitle={\cvname\space - \cvtitle},
+  pdfauthor={\cvname}
+}
 
 {\LARGE \textbf{\cvname}}\\
 \textbf{\cvtitle}\\
