@@ -19,7 +19,7 @@ const translations = {
       role: "Senior Java Backend Engineer",
       lead:
         "Backend-сервисы на Java, интеграции и поэтапная модернизация существующих систем.",
-      location: "Ереван, Армения",
+      location: "Белград, Сербия",
       availability: "Открыт к релокации в ЕС · приоритет Франция / Германия",
       ctaResume: "Резюме и контакты",
     },
@@ -32,7 +32,7 @@ const translations = {
     profile: {
       title: "Профиль",
       body:
-        "Senior Java Backend Engineer с опытом более 15 лет в телекоммуникациях, стриминговых сервисах и retail. Создаю сервисы на Java и Spring Boot, интегрирую системы и повышаю их надежность в production. Модернизирую существующие системы, продолжая выпускать новые функции.",
+        "Senior Java Backend Engineer с опытом более 15 лет в телекоммуникациях, стриминговых сервисах и retail. Модернизирую Java-системы, продолжая выпускать новые функции, включая переход с Java 6 на Java 21 и Spring Boot. С 2021 года совмещаю разработку с обязанностями Team Lead и Tech Lead.",
       target:
         "Ищу hands-on Senior Java Engineer роль с инженерным ростом. Интересны продуктовые backend/platform команды с сильной культурой, умеренной нагрузкой и релокацией в ЕС.",
     },
@@ -49,9 +49,11 @@ const translations = {
     },
     experience: {
       title: "Опыт",
-      e1h: "Senior Java Developer / Team Lead",
+      e1h: "Team Lead / Tech Lead",
       e1company: "Рестрим Медиа · Wink",
-      e1date: "2016 — настоящее время",
+      e1date: "2021 — настоящее время",
+      e1previous: "Ранее: Senior Java Developer, 2016–2021. Основной вклад ниже относится к обеим ролям в Рестрим Медиа.",
+      e1location: "Москва, Россия · Полностью удаленно с 2022 года",
       e1b:
         "Отвечал за сервисы подписок, покупок и интеграций Wink с аудиторией около 10 млн пользователей в месяц. Каждое региональное развертывание обрабатывало около 300 запросов в секунду и хранило около 2 ТБ данных.",
       e2h: "Senior Java Developer · AT Consulting",
@@ -66,7 +68,8 @@ const translations = {
       i1: "Реализовал новые способы покупки и подписки, развил интеграционные потоки и выделил B2B-функциональность в отдельный подпроект.",
       i2: "Спроектировал и создал сервисы авторизации и API gateway для основного продукта.",
       i3: "Вел поэтапную модернизацию с Java 6 до Java 21 и Spring Boot 3.5 без остановки продуктового развития.",
-      i4: "Заменил ручные Oracle-скрипты версионируемыми Liquibase-миграциями с проверками и поддержкой rollback. Оптимизировал SQL и переработал слой доступа к данным.",
+      i4: "Заменил ручные Oracle-скрипты версионируемыми Liquibase-миграциями с проверками и поддержкой rollback. Переработал слой доступа к данным.",
+      sql: "Сократил время выполнения тяжелых Oracle-запросов: анализировал планы и статистику, добавлял индексы, применял optimizer hints и SQL profiles, настраивал базу данных.",
       i5: "Улучшил обмен сообщениями через NSQ: типизированные сообщения, дедупликация и persistent outbox.",
       i6: "Добавил Actuator, Prometheus/Micrometer, readiness, трассировку и тесты с Oracle Testcontainers.",
       i7: "Вел техническую работу команды из пяти инженеров. Провел около 20 собеседований и нанял пять инженеров.",
@@ -100,7 +103,7 @@ const translations = {
       role: "Senior Java Backend Engineer",
       lead:
         "Java backend services, system integrations and step-by-step upgrades of existing systems.",
-      location: "Yerevan, Armenia",
+      location: "Belgrade, Serbia",
       availability: "Open to EU relocation · priority France / Germany",
       ctaResume: "Resume and contact",
     },
@@ -113,7 +116,7 @@ const translations = {
     profile: {
       title: "Profile",
       body:
-        "Senior Java Backend Engineer with 15+ years of experience in telecom, streaming media and retail. I build Java and Spring Boot services, integrate systems and improve production reliability. I modernize existing systems while delivering new features.",
+        "Senior Java Backend Engineer with 15+ years of experience in telecom, streaming media and retail. I modernize existing Java systems while delivering new features, including upgrades from Java 6 to Java 21 and Spring Boot. Since 2021, I have combined hands-on development with Team Lead and Tech Lead responsibilities.",
       target:
         "Looking for a Senior Java Engineer role where I can write code and grow as an engineer. Interested in backend or platform teams that value code quality, testing and reliable systems. Open to relocation within the EU.",
     },
@@ -130,9 +133,11 @@ const translations = {
     },
     experience: {
       title: "Experience",
-      e1h: "Senior Java Developer / Team Lead",
+      e1h: "Team Lead / Tech Lead",
       e1company: "Restream Media · Wink",
-      e1date: "2016 — Present",
+      e1date: "2021 — Present",
+      e1previous: "Previously: Senior Java Developer, 2016–2021. Selected work below covers both roles at Restream Media.",
+      e1location: "Moscow, Russia · Fully remote since 2022",
       e1b:
         "Responsible for subscription, purchase and integration services for Wink, a streaming platform with about 10 million monthly users. Each regional deployment handled about 300 requests per second and stored about 2 TB of data.",
       e2h: "Senior Java Developer · AT Consulting",
@@ -147,7 +152,8 @@ const translations = {
       i1: "Added new purchase and subscription options and improved integrations. Moved B2B features into a separate project.",
       i2: "Designed and built authorization and API gateway services for the core product.",
       i3: "Upgraded backend systems from Java 6 to Java 21 and Spring Boot 3.5 in stages, while continuing to deliver product features.",
-      i4: "Replaced manual Oracle database scripts with versioned Liquibase migrations, including validation and rollback support. Optimized SQL queries and improved the data access layer.",
+      i4: "Replaced manual Oracle database scripts with versioned Liquibase migrations, including validation and rollback support. Improved the data access layer.",
+      sql: "Reduced execution times for slow Oracle queries. Analyzed execution plans and database statistics, added indexes, applied optimizer hints and SQL profiles, and tuned the database.",
       i5: "Improved NSQ messaging with typed messages, deduplication and a persistent outbox.",
       i6: "Added Spring Boot Actuator, Prometheus and Micrometer metrics, readiness checks and request tracing. Added integration tests using Oracle Testcontainers.",
       i7: "Led technical work for a team of five engineers. Interviewed about 20 candidates and hired five engineers.",

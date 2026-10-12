@@ -14,6 +14,12 @@ This folder stores CV sources and one shared layout template.
 
 Run from repository root:
 
+Requires `latexmk`, pdfLaTeX and the LaTeX packages used by `template.tex`.
+Install CM-Super and Cyrillic language support to keep the original scalable
+Computer Modern fonts in both PDFs. On Debian/Ubuntu the packages are:
+`latexmk`, `texlive-latex-base`, `texlive-latex-recommended`, `texlive-latex-extra`,
+`texlive-lang-cyrillic` and `cm-super`.
+
 ```bash
 make cv
 ```
@@ -24,17 +30,6 @@ Output PDFs are generated for GitHub Pages in:
 - `me/cv/takzhanov-cv-ru.pdf`
 
 Temporary build files are kept in `cv/.build/`.
-
-If `latexmk` is unavailable, [Tectonic](https://tectonic-typesetting.github.io/book/latest/installation/)
-can compile the same sources using the DejaVu Serif font (including Cyrillic):
-
-```bash
-mkdir -p cv/.build
-tectonic --outdir cv/.build cv/cv-en.tex
-tectonic --outdir cv/.build cv/cv-ru.tex
-cp cv/.build/cv-en.pdf me/cv/takzhanov-cv-en.pdf
-cp cv/.build/cv-ru.pdf me/cv/takzhanov-cv-ru.pdf
-```
 
 ## Editing workflow
 
