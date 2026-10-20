@@ -3,11 +3,18 @@
 \usepackage[margin=1.4cm]{geometry}
 \usepackage[T1,T2A]{fontenc}
 \usepackage[utf8]{inputenc}
+\input{glyphtounicode}
+\pdfgentounicode=1
 \usepackage[english,russian]{babel}
 \usepackage{enumitem}
+\setlist[itemize]{parsep=0pt, topsep=0.4em}
 \usepackage[pageanchor=false]{hyperref}
 \usepackage{xcolor}
 \usepackage{tabularx}
+
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
+\emergencystretch=3em
 
 \hypersetup{
   colorlinks=true,
@@ -41,15 +48,23 @@
 
 \newcommand{\cvrole}[4]{
   \textbf{#1} \hfill #2\\
-  #3 \hfill #4
+  #3 \hfill #4\par
 }
 
 \begin{document}
 
 \selectlanguage{\cvlang}
 
+\hypersetup{
+  pdftitle={\cvname\space - \cvtitle},
+  pdfauthor={\cvname}
+}
+
+{\centering
 {\LARGE \textbf{\cvname}}\\
-\textbf{\cvtitle}\\
+\textbf{\cvtitle}\par
+}
+\vspace{0.35em}
 \cvlocation \;|\; \cvavailability\\
 \href{mailto:\cvemail}{\cvemail} \;|\;
 \href{\cvlinkedin}{\cvlinkedinlabel} \;|\;
